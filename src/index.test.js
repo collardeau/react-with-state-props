@@ -35,6 +35,24 @@ test("normal case", () => {
   ).toMatchSnapshot();
 });
 
+test("toggle example", () => {
+  const comp = renderComp({
+    seeds: [
+      {
+        name: "active",
+        init: false,
+        toggleable: true
+      }
+    ]
+  });
+  let tree = comp.toJSON();
+  expect(tree.props.active).toBe(false);
+  tree.props.handlers.toggleActive();
+  tree = comp.toJSON();
+  expect(tree.props.active).toBe(true);
+  expect(tree.props).toMatchSnapshot();
+});
+
 test("counter example", () => {
   const comp = renderComp({
     seeds: [
@@ -57,4 +75,31 @@ test("counter example", () => {
   tree.props.handlers.resetCount();
   tree = comp.toJSON();
   expect(tree.props.count).toBe(0);
+});
+
+test("withHandlers example", () => {
+  const comp = renderComp({
+    seeds: [
+      {
+        name: "countA",
+        init: 0
+      },
+      {
+        name: "countB",
+        init: 0
+      }
+    ],
+    withHandlers: {
+      setAll: props => num => {
+        props.handlers.setCountA(num);
+        props.handlers.setCountB(num);
+      }
+    }
+  });
+  let tree = comp.toJSON();
+  expect(tree.props).toMatchSnapshot();
+  tree.props.handlers.setAll(10);
+  tree = comp.toJSON();
+  expect(tree.props.countA).toBe(10);
+  expect(tree.props.countB).toBe(10);
 });

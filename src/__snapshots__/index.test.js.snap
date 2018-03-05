@@ -34,6 +34,28 @@ Object {
 }
 `;
 
+exports[`toggle example 1`] = `
+Object {
+  "active": true,
+  "handlers": Object {
+    "setActive": [Function],
+    "toggleActive": [Function],
+  },
+}
+`;
+
+exports[`withHandlers example 1`] = `
+Object {
+  "countA": 0,
+  "countB": 0,
+  "handlers": Object {
+    "setAll": [Function],
+    "setCountA": [Function],
+    "setCountB": [Function],
+  },
+}
+`;
+
 exports[`without any config 1`] = `
 Object {
   "handlers": Object {},
