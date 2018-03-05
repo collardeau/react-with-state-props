@@ -32,8 +32,8 @@ test("normal case", () => {
   expect(
     getProps({
       seeds: [
-        { name: "users", init: {}, loadable: true },
-        { name: "isVisible", init: false, toggleable: true }
+        { name: "users", initialState: {}, loadable: true },
+        { name: "isVisible", initialState: false, toggleable: true }
       ]
     })
   ).toMatchSnapshot();
@@ -44,7 +44,7 @@ test("loaded flag", () => {
     seeds: [
       {
         name: "users",
-        init: {},
+        initialState: {},
         loadable: true
       }
     ]
@@ -62,7 +62,7 @@ test("mergeable flag", () => {
     seeds: [
       {
         name: "users",
-        init: {},
+        initialState: {},
         mergeable: true
       }
     ]
@@ -80,7 +80,7 @@ test("toggle example", () => {
     seeds: [
       {
         name: "active",
-        init: false,
+        initialState: false,
         toggleable: true
       }
     ]
@@ -101,7 +101,7 @@ test("counter example", () => {
     seeds: [
       {
         name: "count",
-        init: 0,
+        initialState: 0,
         resetable: true,
         handlers: {
           incr: st => st + 1
@@ -125,11 +125,11 @@ test("withHandlers example", () => {
     seeds: [
       {
         name: "countA",
-        init: 0
+        initialState: 0
       },
       {
         name: "countB",
-        init: 0
+        initialState: 0
       }
     ],
     withHandlers: {

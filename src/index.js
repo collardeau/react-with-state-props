@@ -1,24 +1,33 @@
 import React from "react";
 import omit from "ramda/src/omit";
 
+function createUserHandlers(state, fns) {
+  let handlers = {};
+  Object.keys(fns).forEach(key => {
+    handlers[key] = (...params) => fns[key](state)(...params);
+  });
+  return handlers;
+}
+
 class Store extends React.Component {
   static defaultProps = {
     seeds: [],
     withHandlers: {},
     render: props => <div {...props} />
   };
-  createHandlers({
+  createSeedHandlers({
     name,
-    init = null,
-    handlers = [],
+    initialState = null,
+    handlers: customHandlers = [],
     setable = true,
     toggleable = false,
     resetable = false,
     mergeable = false,
     loadable = false
   }) {
-    const stateName = capFirstLetter(name);
+    const capName = cap(name);
     const loadedName = `${name}Loaded`;
+    const setLoadedName = `set${cap(loadedName)}`;
     // state setters for the seed
     const setState = state => {
       this.setState({
@@ -30,85 +39,80 @@ class Store extends React.Component {
         [loadedName]: state
       });
     };
-    let sennaHandlers = {}; // to aggregrate handlers
+    let handlers = {}; // aggregrate handlers
     // create default handlers
     if (loadable) {
-      sennaHandlers[`set${capFirstLetter(loadedName)}`] = bool => {
+      handlers[setLoadedName] = bool => {
         setLoadedState(bool);
       };
     }
     if (setable) {
-      sennaHandlers[`set${stateName}`] = st => {
+      handlers[`set${capName}`] = st => {
         setState(st);
-        loadable && sennaHandlers[`set${loadedName}`](true);
+        loadable && handlers[setLoadedName](true);
       };
     }
     if (resetable) {
-      sennaHandlers[`reset${stateName}`] = () => {
-        setState(init);
+      handlers[`reset${capName}`] = () => {
+        setState(initialState);
       };
     }
     if (toggleable) {
-      sennaHandlers[`toggle${stateName}`] = () => {
+      handlers[`toggle${capName}`] = () => {
         setState(!this.state[name]);
       };
     }
     if (mergeable) {
-      sennaHandlers[`merge${stateName}`] = update => {
+      handlers[`merge${capName}`] = update => {
         setState({ ...this.state[name], ...update });
       };
     }
-    // inject state into user handlers
-    Object.keys(handlers).forEach(fnName => {
-      sennaHandlers[`${fnName}${stateName}`] = () => {
-        const fn = handlers[fnName];
+    Object.keys(customHandlers).forEach(fnName => {
+      handlers[`${fnName}${capName}`] = () => {
+        const fn = customHandlers[fnName];
         setState(fn(this.state[name]));
       };
     });
-    return sennaHandlers;
+    return handlers;
   }
 
-  createState() {
-    return this.props.seeds.reduce((acc, seed = {}) => {
-      const loadedState = !seed.loadable
-        ? null
-        : {
-            [`${seed.name}Loaded`]: false
-          };
+  createStateFromSeeds(seeds) {
+    return seeds.reduce((acc, seed = {}) => {
+      const stateName = seed.name;
+      const handlers = this.createSeedHandlers(seed);
+
+      const maybeLoadedState = seed.loadable
+        ? {
+            [`${stateName}Loaded`]: false
+          }
+        : null;
 
       return {
         ...acc,
-        [seed.name]: seed.init,
-        ...loadedState,
+        [stateName]: seed.initialState,
+        ...maybeLoadedState,
         handlers: {
           ...acc.handlers,
-          ...this.createHandlers(seed)
+          ...handlers
         }
       };
     }, {});
   }
 
-  createUserHandlers(state) {
-    let userHandlers = {};
-    const { withHandlers } = this.props;
-    Object.keys(withHandlers).forEach(key => {
-      userHandlers[key] = (...params) => withHandlers[key](state)(...params);
-    });
-    return userHandlers;
-  }
-
-  initState() {
-    const state = this.createState();
+  init() {
+    const { seeds, withHandlers } = this.props;
+    const state = this.createStateFromSeeds(seeds);
+    const handlers = createUserHandlers(state, withHandlers);
     return {
       ...state,
       handlers: {
         ...state.handlers,
-        ...this.createUserHandlers(state)
+        ...handlers
       }
     };
   }
 
-  state = this.initState();
+  state = this.init();
 
   render() {
     const userProps = omit(["seeds", "render", "withHandlers"], this.props);
@@ -118,7 +122,8 @@ class Store extends React.Component {
 
 // helpers
 
-function capFirstLetter(string) {
+function cap(string) {
+  // capitalize first letter
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
