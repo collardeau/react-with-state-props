@@ -5,7 +5,7 @@ class Store extends React.Component {
   static defaultProps = {
     seeds: [],
     withHandlers: {},
-    render: () => null
+    render: props => <div {...props} />
   };
   createHandlers({
     name,

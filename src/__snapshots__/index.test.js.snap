@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic case 1`] = `
+Object {
+  "handlers": Object {
+    "setUsers": [Function],
+  },
+  "users": undefined,
+}
+`;
+
+exports[`counter example 1`] = `
+Object {
+  "count": 1,
+  "handlers": Object {
+    "incrCount": [Function],
+    "resetCount": [Function],
+    "setCount": [Function],
+  },
+}
+`;
+
+exports[`normal case 1`] = `
+Object {
+  "handlers": Object {
+    "setIsVisible": [Function],
+    "setUsers": [Function],
+    "setUsersLoaded": [Function],
+    "toggleIsVisible": [Function],
+  },
+  "isVisible": false,
+  "users": Object {},
+  "usersLoaded": false,
+}
+`;
+
+exports[`without any config 1`] = `
+Object {
+  "handlers": Object {},
+}
+`;
