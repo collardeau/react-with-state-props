@@ -33,7 +33,7 @@ class Store extends React.Component {
     let sennaHandlers = {}; // to aggregrate handlers
     // create default handlers
     if (loadable) {
-      sennaHandlers[`set${loadedName}`] = bool => {
+      sennaHandlers[`set${capFirstLetter(loadedName)}`] = bool => {
         setLoadedState(bool);
       };
     }
