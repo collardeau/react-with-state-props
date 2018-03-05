@@ -20,6 +20,17 @@ Object {
 }
 `;
 
+exports[`loaded flag 1`] = `
+Object {
+  "handlers": Object {
+    "setUsers": [Function],
+    "setUsersLoaded": [Function],
+  },
+  "users": Object {},
+  "usersLoaded": false,
+}
+`;
+
 exports[`normal case 1`] = `
 Object {
   "handlers": Object {

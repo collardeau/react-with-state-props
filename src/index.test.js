@@ -16,6 +16,10 @@ test("without any config", () => {
   expect(getProps()).toMatchSnapshot();
 });
 
+test("passer user props", () => {
+  expect(getProps({ a: "thing" }).a).toBe("thing");
+});
+
 test("basic case", () => {
   expect(
     getProps({
@@ -35,6 +39,42 @@ test("normal case", () => {
   ).toMatchSnapshot();
 });
 
+test("loaded flag", () => {
+  const comp = renderComp({
+    seeds: [
+      {
+        name: "users",
+        init: {},
+        loadable: true
+      }
+    ]
+  });
+  let tree = comp.toJSON();
+  expect(tree.props).toMatchSnapshot();
+  expect(tree.props.usersLoaded).toBe(false);
+  tree.props.handlers.setUsers({ uid: "some-uid" });
+  tree = comp.toJSON();
+  expect(tree.props.usersLoaded).toBe(true);
+});
+
+test("mergeable flag", () => {
+  const comp = renderComp({
+    seeds: [
+      {
+        name: "users",
+        init: {},
+        mergeable: true
+      }
+    ]
+  });
+  let tree = comp.toJSON();
+  tree.props.handlers.setUsers({ a: "a" });
+  tree.props.handlers.mergeUsers({ b: "b" });
+  tree = comp.toJSON();
+  expect(tree.props.users.a).toBe("a");
+  expect(tree.props.users.b).toBe("b");
+});
+
 test("toggle example", () => {
   const comp = renderComp({
     seeds: [
@@ -51,6 +91,9 @@ test("toggle example", () => {
   tree = comp.toJSON();
   expect(tree.props.active).toBe(true);
   expect(tree.props).toMatchSnapshot();
+  tree.props.handlers.toggleActive();
+  tree = comp.toJSON();
+  expect(tree.props.active).toBe(false);
 });
 
 test("counter example", () => {
