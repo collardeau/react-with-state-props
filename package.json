@@ -1,12 +1,12 @@
 {
   "name": "react-senna",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "initialize state and handlers for React",
   "repository": {
     "type": "git",
     "url": "https://github.com/collardeau/react-senna"
   },
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "watch": "cross-env NODE_ENV=development webpack -w",
     "build:dev": "cross-env NODE_ENV=development webpack",
