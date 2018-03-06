@@ -127,6 +127,38 @@ describe("Errors", () => {
     });
     expect(spy).toBeCalled();
   });
+  test("set a mergeable state to a num", () => {
+    const spy = jest.fn();
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "users",
+          initialState: {},
+          mergeable: true
+        }
+      ],
+      onError: spy
+    });
+    const tree = comp.toJSON();
+    tree.props.handlers.setUsers(0);
+    expect(spy).toBeCalled();
+  });
+  test("set a mergeable state to a string", () => {
+    const spy = jest.fn();
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "users",
+          initialState: {},
+          mergeable: true
+        }
+      ],
+      onError: spy
+    });
+    const tree = comp.toJSON();
+    tree.props.handlers.setUsers("hi");
+    expect(spy).toBeCalled();
+  });
 });
 
 describe("Use cases", () => {

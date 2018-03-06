@@ -23,7 +23,6 @@ class Store extends React.Component {
     withHandlers: PropTypes.objectOf(PropTypes.func),
     render: PropTypes.func.isRequired
   };
-  componentDidCatch(error, info) {}
   createSeedHandlers({
     name,
     initialState = null,
@@ -57,6 +56,11 @@ class Store extends React.Component {
     }
     if (setable) {
       handlers[`set${capName}`] = st => {
+        if (mergeable && typeof st !== typeof initialState) {
+          this.props.onError(
+            `cannot set ${name} because of a mergeable state cannot change type from its initialState`
+          );
+        }
         setState(st);
         loadable && handlers[setLoadedName](true);
       };
