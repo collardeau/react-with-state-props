@@ -55,11 +55,15 @@ const App = () => (
 
 A Senna store takes in the following props:
 
+## render
+
+The component to render which will receive Senna props!
+
 ## seeds
 
 `PropTypes.array.isRequired`
 
-An array of seed objects that will initialize our store, with the following keys:
+An array of seed objects that will initialize the Senna store, with the following keys:
 
 #### name
 `PropTypes.string.isRequired`
@@ -88,11 +92,6 @@ will create `handlers.incrCounter` as a `prop`, which as suggested would increme
 default: `false`
 
 `resetable: true` will create a handler that will set the state to its initial value.
-
-For example a seed with:
-
-`{ name: 'counter', initialState: 0, resetable: true }`
-will receive `handlers.resetCounter` as a `prop`, which sets the `counter` state to 0.
 
 #### toggleable
 
