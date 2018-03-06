@@ -11,7 +11,7 @@ function createUserHandlers(state, fns) {
   return handlers;
 }
 
-class Store extends React.Component {
+export class Store extends React.Component {
   static defaultProps = {
     seeds: [],
     withHandlers: {},
@@ -157,5 +157,3 @@ class Store extends React.Component {
     return this.props.render({ ...this.state, ...userProps });
   }
 }
-
-export default Store;

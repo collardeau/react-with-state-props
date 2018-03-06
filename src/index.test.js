@@ -1,9 +1,9 @@
 import React from "react";
-import Senna from "./index";
+import { Store } from "./index";
 import renderer from "react-test-renderer";
 
 function renderComp(props = {}) {
-  return renderer.create(<Senna {...props} />);
+  return renderer.create(<Store {...props} />);
 }
 
 function getProps(props) {
