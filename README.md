@@ -62,7 +62,7 @@ The component to render which will receive `react-senna` props!
 ### seeds
 `PropTypes.array.isRequired`
 
-An array of seed objects that will initialize the store, with **the following keys**:
+An array of seed objects that will initialize the store, which accept **the following keys**:
 
 #### name `PropTypes.string.isRequired`
 
