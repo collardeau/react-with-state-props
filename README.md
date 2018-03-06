@@ -12,7 +12,7 @@
 import React from "react";
 import { Store } from "react-senna";
 
-// describe the state you want in a `seeds` array, for example:
+// describe the state you want in a `seeds` array, as in a counter example:
 const seeds = [
   {
     name: "counter",
@@ -24,7 +24,7 @@ const seeds = [
   }
 ];
 
-// Use the Store component to initiate react state with handlers
+// Use the Store component to initiate React state, with handlers to update that state
 const App = () => (
   <Store
     seeds={seeds}
@@ -33,8 +33,8 @@ const App = () => (
       /*
       {
         counter: 0
-        handlers: {
-          setCounter: [Function],
+        handlers: { <- use `setState` behind the scenes
+          setCounter: [Function],
           incrCounter: [Function],
           resetCounter: [Function]
         }
