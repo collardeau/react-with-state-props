@@ -53,7 +53,7 @@ const App = () => (
 
 ## Available Props
 
-A react-senna store accepts the following props:
+The Store component accepts the following props:
 
 ### render
 
@@ -62,7 +62,7 @@ The component to render which will receive `react-senna` props!
 ### seeds
 `PropTypes.array.isRequired`
 
-An array of seed objects that will initialize the Senna store, with **the following keys**:
+An array of seed objects that will initialize the store, with **the following keys**:
 
 #### name `PropTypes.string.isRequired`
 
