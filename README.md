@@ -119,7 +119,7 @@ results in these props:
   isActive: false,
   handlers: {
     setIsActive: [Function],
-    toggleActive: [Function],
+    toggleIsActive: [Function],
   }
 }
 */
@@ -128,7 +128,7 @@ results in these props:
 
 `props.handlers.toggleIsActive` which will flip the state of `isActive`
 
-`toggleable: true` could also be written as `{ handlers: { toggle: state => !state } }`
+In fact, `toggleable: true` could also be written as `{ handlers: { toggle: state => !state } }`
 
 #### - loadable `PropTypes.bool`
 
