@@ -1,6 +1,6 @@
 {
   "name": "react-senna",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "initialize state and handlers for React",
   "repository": {
     "type": "git",
