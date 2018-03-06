@@ -8,4 +8,41 @@
 
 ## Usage
 
-Coming Soon
+```javascript
+import React from "react";
+import { Store } from "react-senna";
+
+// describe the state you want in a `seeds` array, for example:
+const seeds = [
+  {
+    name: "counter",
+    initialState: 0,
+    resetable: true,
+    handlers: {
+      incr: state => state + 1
+    }
+  }
+];
+
+// Use the Store component to initiate react state with handlers
+const App = () => (
+  <Store
+    seeds={seeds}
+    render={props => {
+      console.log(props);
+      /*
+      {
+        counter: 0
+        handlers: {
+          setCounter: [Function],
+          incrCounter: [Function],
+          resetCounter: [Function]
+        }
+      }
+      */
+      return <div />; // render whatever you want with the state and handlers you just created!
+    }}
+  />
+)
+
+```
