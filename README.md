@@ -2,6 +2,10 @@
 [![Coverage Status](https://coveralls.io/repos/github/collardeau/react-senna/badge.svg?branch=master)](https://coveralls.io/github/collardeau/react-senna?branch=master)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
+# react-senna
+
+A store component to quickly initialize state and `setState` handlers in React.
+
 ## Installation
 
 `npm install react-senna`
@@ -33,7 +37,7 @@ const App = () => (
       /*
       {
         counter: 0
-        handlers: { <- use `setState` behind the scenes
+        handlers: {
           setCounter: [Function],
           incrCounter: [Function],
           resetCounter: [Function]
@@ -76,7 +80,7 @@ Create custom handlers with the current state as a param.
 For example a seed with:
 
 `{ name: 'counter', initialState: 0, handlers: {incr: state => state + 1}`
-will receive `handlers.incrCounter` as a `prop`, which increments the `counter` state by 1.
+will receive `handlers.incrCounter` as a `prop`, which as suggested would increment the `counter` state by 1.
 
 
 ```
