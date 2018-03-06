@@ -1,17 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Flags loaded flag 1`] = `
-Object {
-  "handlers": Object {
-    "setUsers": [Function],
-    "setUsersLoaded": [Function],
-  },
-  "users": Object {},
-  "usersLoaded": false,
-}
-`;
-
-exports[`Props basic case 1`] = `
+exports[`Props Handling basic case 1`] = `
 Object {
   "handlers": Object {
     "setUsers": [Function],
@@ -20,13 +9,13 @@ Object {
 }
 `;
 
-exports[`Props no props given 1`] = `
+exports[`Props Handling no props given 1`] = `
 Object {
   "handlers": Object {},
 }
 `;
 
-exports[`Props normal case 1`] = `
+exports[`Props Handling normal case 1`] = `
 Object {
   "handlers": Object {
     "setIsVisible": [Function],
@@ -37,38 +26,5 @@ Object {
   "isVisible": false,
   "users": Object {},
   "usersLoaded": false,
-}
-`;
-
-exports[`Use cases counter example using resetable and custom handlers 1`] = `
-Object {
-  "count": 1,
-  "handlers": Object {
-    "incrCount": [Function],
-    "resetCount": [Function],
-    "setCount": [Function],
-  },
-}
-`;
-
-exports[`Use cases toggle example using toggeable 1`] = `
-Object {
-  "active": true,
-  "handlers": Object {
-    "setActive": [Function],
-    "toggleActive": [Function],
-  },
-}
-`;
-
-exports[`Use cases using compound handlers 1`] = `
-Object {
-  "countA": 0,
-  "countB": 0,
-  "handlers": Object {
-    "setAll": [Function],
-    "setCountA": [Function],
-    "setCountB": [Function],
-  },
 }
 `;

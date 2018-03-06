@@ -12,7 +12,7 @@ function getProps(props) {
   return tree && tree.props;
 }
 
-describe("Props", () => {
+describe("Props Handling", () => {
   test("no props given", () => {
     expect(getProps()).toMatchSnapshot();
   });
@@ -114,7 +114,6 @@ describe("Flags", () => {
       ]
     });
     let tree = comp.toJSON();
-    expect(tree.props).toMatchSnapshot();
     expect(tree.props.usersLoaded).toBe(false);
     tree.props.handlers.setUsers({ uid: "some-uid" });
     tree = comp.toJSON();
@@ -238,7 +237,6 @@ describe("Use cases", () => {
     tree.props.handlers.toggleActive();
     tree = comp.toJSON();
     expect(tree.props.active).toBe(true);
-    expect(tree.props).toMatchSnapshot();
     tree.props.handlers.toggleActive();
     tree = comp.toJSON();
     expect(tree.props.active).toBe(false);
@@ -262,7 +260,6 @@ describe("Use cases", () => {
     tree.props.handlers.incrCount();
     tree = comp.toJSON();
     expect(tree.props.count).toBe(1);
-    expect(tree.props).toMatchSnapshot();
     tree.props.handlers.resetCount();
     tree = comp.toJSON();
     expect(tree.props.count).toBe(0);
@@ -288,7 +285,6 @@ describe("Use cases", () => {
       }
     });
     let tree = comp.toJSON();
-    expect(tree.props).toMatchSnapshot();
     tree.props.handlers.setAll(10);
     tree = comp.toJSON();
     expect(tree.props.countA).toBe(10);
