@@ -46,3 +46,39 @@ const App = () => (
 )
 
 ```
+
+## Props
+
+A Senna store takes in the following props:
+
+### seeds
+
+`PropTypes.array.isRequired`
+
+An array of seed objects that will initialize our store, with the following keys:
+
+#### - name
+`PropTypes.string.isRequired`
+
+The name of the state to be created.
+
+#### - initialState
+`PropTypes.any`
+
+The initial (and reset) value of the state in question.
+
+#### - handlers
+
+`PropTypes.objOf(PropTypes.func)`
+
+Create custom handlers with the current state as a param.
+
+For example a seed with:
+
+`{ name: 'counter', initialState: 0, handlers: {incr: state => state + 1}`
+will receive `handlers.incrCounter` as a `prop`, which increments the `counter` state by 1.
+
+
+```
+
+
