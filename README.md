@@ -106,7 +106,7 @@ will create `handlers.toggleIsActive` as a `prop`, which will flip the state (`!
 `withHandlers` takes an object of high-order functions.
 
 Here you can access the `react-senna` props so you can you create more complex state changes.
-For example:
+For example, controlling separate counters:
 
 ```javascript
 
@@ -147,4 +147,32 @@ const App = () => (
     )}
   />
 )
+```
+
+You can do aysnc stuff too in `withHandlers`:
+
+```javascript
+
+const seeds = [
+  {
+    name: "users",
+    initialState: {}
+  }
+];
+
+const withHandlers = {
+  get: ({ handlers }) => () => {
+    setTimeout(() => {
+      handlers.setUsers(
+        {
+          some: "users"
+        },
+        1000
+      );
+    });
+  }
+};
+
+// creates a `handlers.getUsers` prop
+
 ```
