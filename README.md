@@ -100,13 +100,42 @@ will create `handlers.toggleIsActive` as a `prop`, which will flip the state (`!
 
 `toggleable: true` is a shorcut for `{ handlers: { toggle: state => !state } }`
 
+#### - loadable `PropTypes.bool`
+
+default: `false`
+
+`loadable: true` creates a loaded state:
+
+```javascript
+
+const seed = {
+  name: 'users',
+  initialState: {},
+  loadable: true
+}
+/*
+results in these props:
+{
+  users: {},
+  usersLoaded: false
+  handlers: {
+    setUsers: [Function],
+    setUsersLoaded: [Function],
+  }
+}
+*/
+
+```
+
+In the example, `usersLoaded` is automatically set to `true` when `users` is updated.
+
 ## withHandlers
 `PropTypes.objOf(PropTypes.func)`
 
 `withHandlers` takes an object of high-order functions.
 
 Here you can access the `react-senna` props so you can you create more complex state changes.
-For example, controlling separate counters:
+For example, controlling two separate counter states:
 
 ```javascript
 
