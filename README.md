@@ -8,7 +8,7 @@ A store component to quickly initialize state and `setState` handlers in React.
 
 ## Installation
 
-`npm install react-senna`
+`npm install react-senna --save`
 
 ## Usage
 
