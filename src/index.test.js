@@ -12,7 +12,7 @@ function getProps(props) {
   return tree && tree.props;
 }
 
-describe("Props Handling", () => {
+describe("Props", () => {
   test("no props given", () => {
     expect(getProps()).toMatchSnapshot();
   });
@@ -38,6 +38,67 @@ describe("Props Handling", () => {
         ]
       })
     ).toMatchSnapshot();
+  });
+});
+
+describe("setState callback", () => {
+  test("with setable", () => {
+    const spy = jest.fn();
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "users",
+          setable: true
+        }
+      ]
+    });
+    let tree = comp.toJSON();
+    tree.props.handlers.setUsers({}, spy);
+    expect(spy).toBeCalled();
+  });
+  test("with resetable", () => {
+    const spy = jest.fn();
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "users",
+          resetable: true
+        }
+      ]
+    });
+    const tree = comp.toJSON();
+    tree.props.handlers.resetUsers(spy);
+    expect(spy).toBeCalled();
+  });
+  test("with mergeable", () => {
+    const spy = jest.fn();
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "users",
+          initialState: [],
+          mergeable: true
+        }
+      ]
+    });
+    const tree = comp.toJSON();
+    tree.props.handlers.mergeUsers(["user"], spy);
+    expect(spy).toBeCalled();
+  });
+
+  test("with toggleable", () => {
+    const spy = jest.fn();
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "active",
+          toggleable: true
+        }
+      ]
+    });
+    const tree = comp.toJSON();
+    tree.props.handlers.toggleActive(spy);
+    expect(spy).toBeCalled();
   });
 });
 
@@ -71,7 +132,9 @@ describe("Flags", () => {
       ]
     });
     let tree = comp.toJSON();
-    tree.props.handlers.setUsers({ a: "a" });
+    tree.props.handlers.setUsers({ a: "a" }, () => {
+      console.log("hahahahah");
+    });
     tree.props.handlers.mergeUsers({ b: "b" });
     tree = comp.toJSON();
     expect(tree.props.users.a).toBe("a");

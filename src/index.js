@@ -43,10 +43,13 @@ export class Store extends React.Component {
     const setLoadedName = `set${cap(loadedName)}`;
     const { _onError: onError } = this.props;
     // state setters for the seed
-    const setState = state => {
-      this.setState({
-        [name]: state
-      });
+    const setState = (state, cb) => {
+      this.setState(
+        {
+          [name]: state
+        },
+        cb
+      );
     };
     const setLoadedState = state => {
       this.setState({
@@ -56,29 +59,27 @@ export class Store extends React.Component {
     let handlers = {}; // aggregrate handlers
     // create default handlers
     if (loadable) {
-      handlers[setLoadedName] = bool => {
-        setLoadedState(bool);
-      };
+      handlers[setLoadedName] = setLoadedState;
     }
     if (setable) {
-      handlers[`set${capName}`] = state => {
+      handlers[`set${capName}`] = (state, cb) => {
         if (mergeable && typeof state !== typeof initialState) {
           onError(
             `cannot set ${name} because of a mergeable state cannot change type from its initialState`
           );
         }
-        setState(state);
+        setState(state, cb);
         loadable && handlers[setLoadedName](true);
       };
     }
     if (resetable) {
-      handlers[`reset${capName}`] = () => {
-        setState(initialState);
+      handlers[`reset${capName}`] = cb => {
+        setState(initialState, cb);
       };
     }
     if (toggleable) {
-      handlers[`toggle${capName}`] = () => {
-        setState(!this.state[name]);
+      handlers[`toggle${capName}`] = cb => {
+        setState(!this.state[name], cb);
       };
     }
     if (mergeable) {
@@ -87,13 +88,13 @@ export class Store extends React.Component {
           `Your ${name} state is mergeable but the initialState is ${initialState}; it should be an object or array`
         );
       }
-      handlers[`merge${capName}`] = update => {
+      handlers[`merge${capName}`] = (update, cb) => {
         const state = this.state[name];
         if (Array.isArray(state) && Array.isArray(update)) {
-          return setState([...state, ...update]);
+          return setState([...state, ...update], cb);
         }
         if (isObj(state) && isObj(update)) {
-          return setState({ ...state, ...update });
+          return setState({ ...state, ...update }, cb);
         }
         onError(
           `Cannot merge ${name} because of mismatched types. Please pass an ${
