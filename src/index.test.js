@@ -131,9 +131,7 @@ describe("Flags", () => {
       ]
     });
     let tree = comp.toJSON();
-    tree.props.handlers.setUsers({ a: "a" }, () => {
-      console.log("hahahahah");
-    });
+    tree.props.handlers.setUsers({ a: "a" });
     tree.props.handlers.mergeUsers({ b: "b" });
     tree = comp.toJSON();
     expect(tree.props.users.a).toBe("a");
