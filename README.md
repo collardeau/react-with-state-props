@@ -100,12 +100,6 @@ results in these props:
 ```
 The `props.handlers.incrCounter` function increments the `counter` state by 1
 
-#### - resetable `PropTypes.bool`
-
-default: `false`
-
-`resetable: true` will create a handler that will set the state to its initial value.
-
 #### - toggleable `PropTypes.bool`
 
 default: `false`
@@ -164,6 +158,13 @@ results in these props:
 ```
 
 In the example, `usersLoaded` is automatically set to `true` when `users` is updated.
+
+
+#### - resetable `PropTypes.bool`
+
+default: `false`
+
+`resetable: true` will create a handler that will set the state to its initial value. For example, `resetCounter`.
 
 ## withHandlers
 `PropTypes.objOf(PropTypes.func)`
