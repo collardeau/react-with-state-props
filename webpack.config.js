@@ -20,7 +20,8 @@ const WebpackConfig = {
     rules: [
       {
         test: /.js$/,
-        use: "babel-loader"
+        use: "babel-loader",
+        exclude: /node_modules/
       }
     ]
   }
@@ -29,6 +30,10 @@ const WebpackConfig = {
 // webpack production config.
 if (process.env.NODE_ENV === "production") {
   WebpackConfig.mode = "production";
+  WebpackConfig.externals = {
+    react: "react",
+    "react-dom": "react-dom"
+  };
 }
 
 module.exports = WebpackConfig;
