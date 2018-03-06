@@ -64,15 +64,15 @@ The component to render which will receive `react-senna` props!
 
 An array of seed objects that will initialize the store, which have **the following keys**:
 
-#### name `PropTypes.string.isRequired`
+#### - name `PropTypes.string.isRequired`
 
 The name of the state to be created.
 
-#### initialState `PropTypes.any`
+#### - initialState `PropTypes.any`
 
 The initial (and reset) value of the state being seeded.
 
-#### handlers `PropTypes.objOf(PropTypes.func)`
+#### - handlers `PropTypes.objOf(PropTypes.func)`
 
 Here, you can create handlers using the current state as a parameter.
 
@@ -81,13 +81,13 @@ For example a seed with:
 `{ name: 'counter', initialState: 0, handlers: {incr: state => state + 1}`
 will create `handlers.incrCounter` as a `prop`, which increments the `counter` state by 1.
 
-#### resetable `PropTypes.bool`
+#### - resetable `PropTypes.bool`
 
 default: `false`
 
 `resetable: true` will create a handler that will set the state to its initial value.
 
-#### toggleable `PropTypes.bool`
+#### - toggleable `PropTypes.bool`
 
 default: `false`
 
