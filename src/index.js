@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import omit from "ramda/src/omit";
+import { cap, isObj, throwError } from "./utils";
 
 function createUserHandlers(state, fns) {
   let handlers = {};
@@ -14,13 +15,15 @@ class Store extends React.Component {
   static defaultProps = {
     seeds: [],
     withHandlers: {},
-    render: props => <div {...props} />
+    render: props => <div {...props} />,
+    onError: throwError
   };
   static propTypes = {
     seeds: PropTypes.array.isRequired,
     withHandlers: PropTypes.objectOf(PropTypes.func),
     render: PropTypes.func.isRequired
   };
+  componentDidCatch(error, info) {}
   createSeedHandlers({
     name,
     initialState = null,
@@ -69,8 +72,24 @@ class Store extends React.Component {
       };
     }
     if (mergeable) {
+      if (!Array.isArray(initialState) && !isObj(initialState)) {
+        this.props.onError(
+          `Your ${name} state is mergeable but the initialState is ${initialState}; it should be an object or array`
+        );
+      }
       handlers[`merge${capName}`] = update => {
-        setState({ ...this.state[name], ...update });
+        const state = this.state[name];
+        if (Array.isArray(state) && Array.isArray(update)) {
+          return setState([...state, ...update]);
+        }
+        if (isObj(state) && isObj(update)) {
+          return setState({ ...state, ...update });
+        }
+        this.props.onError(
+          `Cannot merge ${name} because of mismatched types. Please pass an ${
+            isObj(state) ? "object" : "array"
+          } to merge${capName}.`
+        );
       };
     }
     Object.keys(customHandlers).forEach(fnName => {
@@ -121,16 +140,12 @@ class Store extends React.Component {
   state = this.init();
 
   render() {
-    const userProps = omit(["seeds", "render", "withHandlers"], this.props);
+    const userProps = omit(
+      ["seeds", "render", "withHandlers", "onError"],
+      this.props
+    );
     return this.props.render({ ...this.state, ...userProps });
   }
-}
-
-// helpers
-
-function cap(string) {
-  // capitalize first letter
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export default Store;

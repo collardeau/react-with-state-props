@@ -12,137 +12,193 @@ function getProps(props) {
   return tree && tree.props;
 }
 
-test("without any config", () => {
-  expect(getProps()).toMatchSnapshot();
+describe("Props Handling", () => {
+  test("no props given", () => {
+    expect(getProps()).toMatchSnapshot();
+  });
+
+  // it breaks if seeds are not an object
+
+  test("passes user props", () => {
+    expect(getProps({ a: "thing" }).a).toBe("thing");
+  });
+
+  test("basic case", () => {
+    expect(
+      getProps({
+        seeds: [{ name: "users" }]
+      })
+    ).toMatchSnapshot();
+  });
+
+  test("normal case", () => {
+    expect(
+      getProps({
+        seeds: [
+          { name: "users", initialState: {}, loadable: true },
+          { name: "isVisible", initialState: false, toggleable: true }
+        ]
+      })
+    ).toMatchSnapshot();
+  });
 });
 
-test("passer user props", () => {
-  expect(getProps({ a: "thing" }).a).toBe("thing");
-});
-
-test("basic case", () => {
-  expect(
-    getProps({
-      seeds: [{ name: "users" }]
-    })
-  ).toMatchSnapshot();
-});
-
-test("normal case", () => {
-  expect(
-    getProps({
+describe("Flags", () => {
+  test("loaded flag", () => {
+    const comp = renderComp({
       seeds: [
-        { name: "users", initialState: {}, loadable: true },
-        { name: "isVisible", initialState: false, toggleable: true }
+        {
+          name: "users",
+          initialState: {},
+          loadable: true
+        }
       ]
-    })
-  ).toMatchSnapshot();
-});
-
-test("loaded flag", () => {
-  const comp = renderComp({
-    seeds: [
-      {
-        name: "users",
-        initialState: {},
-        loadable: true
-      }
-    ]
+    });
+    let tree = comp.toJSON();
+    expect(tree.props).toMatchSnapshot();
+    expect(tree.props.usersLoaded).toBe(false);
+    tree.props.handlers.setUsers({ uid: "some-uid" });
+    tree = comp.toJSON();
+    expect(tree.props.usersLoaded).toBe(true);
   });
-  let tree = comp.toJSON();
-  expect(tree.props).toMatchSnapshot();
-  expect(tree.props.usersLoaded).toBe(false);
-  tree.props.handlers.setUsers({ uid: "some-uid" });
-  tree = comp.toJSON();
-  expect(tree.props.usersLoaded).toBe(true);
-});
 
-test("mergeable flag", () => {
-  const comp = renderComp({
-    seeds: [
-      {
-        name: "users",
-        initialState: {},
-        mergeable: true
-      }
-    ]
+  test("mergeable with objects", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "users",
+          initialState: {},
+          mergeable: true
+        }
+      ]
+    });
+    let tree = comp.toJSON();
+    tree.props.handlers.setUsers({ a: "a" });
+    tree.props.handlers.mergeUsers({ b: "b" });
+    tree = comp.toJSON();
+    expect(tree.props.users.a).toBe("a");
+    expect(tree.props.users.b).toBe("b");
   });
-  let tree = comp.toJSON();
-  tree.props.handlers.setUsers({ a: "a" });
-  tree.props.handlers.mergeUsers({ b: "b" });
-  tree = comp.toJSON();
-  expect(tree.props.users.a).toBe("a");
-  expect(tree.props.users.b).toBe("b");
-});
 
-test("toggle example", () => {
-  const comp = renderComp({
-    seeds: [
-      {
-        name: "active",
-        initialState: false,
-        toggleable: true
-      }
-    ]
+  test("mergeable with arrays", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "users",
+          initialState: [],
+          mergeable: true
+        }
+      ]
+    });
+    let tree = comp.toJSON();
+    tree.props.handlers.setUsers(["a"]);
+    tree.props.handlers.mergeUsers(["b"]);
+    tree = comp.toJSON();
+    expect(tree.props.users[0]).toBe("a");
+    expect(tree.props.users[1]).toBe("b");
   });
-  let tree = comp.toJSON();
-  expect(tree.props.active).toBe(false);
-  tree.props.handlers.toggleActive();
-  tree = comp.toJSON();
-  expect(tree.props.active).toBe(true);
-  expect(tree.props).toMatchSnapshot();
-  tree.props.handlers.toggleActive();
-  tree = comp.toJSON();
-  expect(tree.props.active).toBe(false);
+});
+describe("Errors", () => {
+  test("mergeable with num for initial state", () => {
+    const spy = jest.fn();
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "x",
+          initialState: 0,
+          mergeable: true
+        }
+      ],
+      onError: spy
+    });
+    expect(spy).toBeCalled();
+  });
+  test("mergeable with string for initial state", () => {
+    const spy = jest.fn();
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "users",
+          initialState: "hi",
+          mergeable: true
+        }
+      ],
+      onError: spy
+    });
+    expect(spy).toBeCalled();
+  });
 });
 
-test("counter example", () => {
-  const comp = renderComp({
-    seeds: [
-      {
-        name: "count",
-        initialState: 0,
-        resetable: true,
-        handlers: {
-          incr: st => st + 1
+describe("Use cases", () => {
+  test("toggle example", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "active",
+          initialState: false,
+          toggleable: true
+        }
+      ]
+    });
+    let tree = comp.toJSON();
+    expect(tree.props.active).toBe(false);
+    tree.props.handlers.toggleActive();
+    tree = comp.toJSON();
+    expect(tree.props.active).toBe(true);
+    expect(tree.props).toMatchSnapshot();
+    tree.props.handlers.toggleActive();
+    tree = comp.toJSON();
+    expect(tree.props.active).toBe(false);
+  });
+
+  test("counter example", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "count",
+          initialState: 0,
+          resetable: true,
+          handlers: {
+            incr: st => st + 1
+          }
+        }
+      ]
+    });
+    let tree = comp.toJSON();
+    expect(tree.props.count).toBe(0);
+    tree.props.handlers.incrCount();
+    tree = comp.toJSON();
+    expect(tree.props.count).toBe(1);
+    expect(tree.props).toMatchSnapshot();
+    tree.props.handlers.resetCount();
+    tree = comp.toJSON();
+    expect(tree.props.count).toBe(0);
+  });
+
+  test("with compound handlers example", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "countA",
+          initialState: 0
+        },
+        {
+          name: "countB",
+          initialState: 0
+        }
+      ],
+      withHandlers: {
+        setAll: props => num => {
+          props.handlers.setCountA(num);
+          props.handlers.setCountB(num);
         }
       }
-    ]
+    });
+    let tree = comp.toJSON();
+    expect(tree.props).toMatchSnapshot();
+    tree.props.handlers.setAll(10);
+    tree = comp.toJSON();
+    expect(tree.props.countA).toBe(10);
+    expect(tree.props.countB).toBe(10);
   });
-  let tree = comp.toJSON();
-  expect(tree.props.count).toBe(0);
-  tree.props.handlers.incrCount();
-  tree = comp.toJSON();
-  expect(tree.props.count).toBe(1);
-  expect(tree.props).toMatchSnapshot();
-  tree.props.handlers.resetCount();
-  tree = comp.toJSON();
-  expect(tree.props.count).toBe(0);
-});
-
-test("withHandlers example", () => {
-  const comp = renderComp({
-    seeds: [
-      {
-        name: "countA",
-        initialState: 0
-      },
-      {
-        name: "countB",
-        initialState: 0
-      }
-    ],
-    withHandlers: {
-      setAll: props => num => {
-        props.handlers.setCountA(num);
-        props.handlers.setCountB(num);
-      }
-    }
-  });
-  let tree = comp.toJSON();
-  expect(tree.props).toMatchSnapshot();
-  tree.props.handlers.setAll(10);
-  tree = comp.toJSON();
-  expect(tree.props.countA).toBe(10);
-  expect(tree.props.countB).toBe(10);
 });

@@ -1,26 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`basic case 1`] = `
-Object {
-  "handlers": Object {
-    "setUsers": [Function],
-  },
-  "users": undefined,
-}
-`;
-
-exports[`counter example 1`] = `
-Object {
-  "count": 1,
-  "handlers": Object {
-    "incrCount": [Function],
-    "resetCount": [Function],
-    "setCount": [Function],
-  },
-}
-`;
-
-exports[`loaded flag 1`] = `
+exports[`Flags loaded flag 1`] = `
 Object {
   "handlers": Object {
     "setUsers": [Function],
@@ -31,7 +11,22 @@ Object {
 }
 `;
 
-exports[`normal case 1`] = `
+exports[`Props Handling basic case 1`] = `
+Object {
+  "handlers": Object {
+    "setUsers": [Function],
+  },
+  "users": undefined,
+}
+`;
+
+exports[`Props Handling no props given 1`] = `
+Object {
+  "handlers": Object {},
+}
+`;
+
+exports[`Props Handling normal case 1`] = `
 Object {
   "handlers": Object {
     "setIsVisible": [Function],
@@ -45,7 +40,18 @@ Object {
 }
 `;
 
-exports[`toggle example 1`] = `
+exports[`Use cases counter example 1`] = `
+Object {
+  "count": 1,
+  "handlers": Object {
+    "incrCount": [Function],
+    "resetCount": [Function],
+    "setCount": [Function],
+  },
+}
+`;
+
+exports[`Use cases toggle example 1`] = `
 Object {
   "active": true,
   "handlers": Object {
@@ -55,7 +61,7 @@ Object {
 }
 `;
 
-exports[`withHandlers example 1`] = `
+exports[`Use cases with compound handlers example 1`] = `
 Object {
   "countA": 0,
   "countB": 0,
@@ -64,11 +70,5 @@ Object {
     "setCountA": [Function],
     "setCountB": [Function],
   },
-}
-`;
-
-exports[`without any config 1`] = `
-Object {
-  "handlers": Object {},
 }
 `;
