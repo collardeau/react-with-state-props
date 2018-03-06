@@ -64,16 +64,16 @@ The component to render which will receive Senna props!
 
 An array of seed objects that will initialize the Senna store, with the following keys:
 
-##### name
+#### name
 `PropTypes.string.isRequired`
 
 The name of the state to be created.
 
-##### initialState `PropTypes.any`
+#### initialState `PropTypes.any`
 
 The initial (and reset) value of the state being seeded.
 
-##### handlers `PropTypes.objOf(PropTypes.func)`
+#### handlers `PropTypes.objOf(PropTypes.func)`
 
 To create custom handlers with the current state as a param.
 
@@ -82,13 +82,13 @@ For example a seed with:
 `{ name: 'counter', initialState: 0, handlers: {incr: state => state + 1}`
 will create `handlers.incrCounter` as a `prop`, which as suggested would increment the `counter` state by 1.
 
-##### resetable `PropTypes.objOf(PropTypes.bool)`
+#### resetable `PropTypes.objOf(PropTypes.bool)`
 
 default: `false`
 
 `resetable: true` will create a handler that will set the state to its initial value.
 
-##### toggleable `PropTypes.objOf(PropTypes.bool)`
+#### toggleable `PropTypes.objOf(PropTypes.bool)`
 
 default: `false`
 
