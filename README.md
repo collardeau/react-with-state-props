@@ -81,13 +81,13 @@ For example a seed with:
 `{ name: 'counter', initialState: 0, handlers: {incr: state => state + 1}`
 will create `handlers.incrCounter` as a `prop`, which increments the `counter` state by 1.
 
-#### resetable `PropTypes.objOf(PropTypes.bool)`
+#### resetable `PropTypes.bool`
 
 default: `false`
 
 `resetable: true` will create a handler that will set the state to its initial value.
 
-#### toggleable `PropTypes.objOf(PropTypes.bool)`
+#### toggleable `PropTypes.bool`
 
 default: `false`
 
