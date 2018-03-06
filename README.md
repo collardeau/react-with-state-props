@@ -16,7 +16,7 @@ A store component to quickly initialize state and `setState` handlers in React.
 import React from "react";
 import { Store } from "react-senna";
 
-// describe the state you want in a `seeds` array, as in a counter example:
+// describe the state you want in a `seeds` array, for example:
 const seeds = [
   {
     name: "counter",
@@ -75,14 +75,36 @@ The initial (and reset) value of the state in question.
 
 `PropTypes.objOf(PropTypes.func)`
 
-Create custom handlers with the current state as a param.
+To create custom handlers with the current state as a param.
 
 For example a seed with:
 
 `{ name: 'counter', initialState: 0, handlers: {incr: state => state + 1}`
 will receive `handlers.incrCounter` as a `prop`, which as suggested would increment the `counter` state by 1.
 
+#### - resetable
 
-```
+`PropTypes.objOf(PropTypes.bool)`
+default: `false`
 
+`resetable: true` will create a handler that will set the state to its initial value.
+
+For example a seed with:
+
+`{ name: 'counter', initialState: 0, resetable: true }`
+will receive `handlers.resetCounter` as a `prop`, which sets the `counter` state to 0.
+
+#### - toggleable
+
+`PropTypes.objOf(PropTypes.bool)`
+default: `false`
+
+`toggleable: true` will create a handler that will set the state to its opposite.
+
+For example a seed with:
+
+`{ name: 'isActive', initialState: false, toggleable: true }`
+will receive `handlers.toggleIsActive` as a `prop`, which will flip the state(`!state`)
+
+`toggleable: true` is a shorcut for `{ handlers: { toggle: state => !state } }`
 
