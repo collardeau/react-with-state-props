@@ -53,19 +53,18 @@ const App = () => (
 
 ## Available Props
 
-A Senna store takes in the following props:
+A react-senna store accepts the following props:
 
 ### render
 
-The component to render which will receive Senna props!
+The component to render which will receive `react-senna` props!
 
 ### seeds
 `PropTypes.array.isRequired`
 
-An array of seed objects that will initialize the Senna store, with the following keys:
+An array of seed objects that will initialize the Senna store, with **the following keys**:
 
-#### name
-`PropTypes.string.isRequired`
+#### name `PropTypes.string.isRequired`
 
 The name of the state to be created.
 
@@ -80,7 +79,7 @@ To create custom handlers with the current state as a param.
 For example a seed with:
 
 `{ name: 'counter', initialState: 0, handlers: {incr: state => state + 1}`
-will create `handlers.incrCounter` as a `prop`, which as suggested would increment the `counter` state by 1.
+will create `handlers.incrCounter` as a `prop`, which increments the `counter` state by 1.
 
 #### resetable `PropTypes.objOf(PropTypes.bool)`
 
