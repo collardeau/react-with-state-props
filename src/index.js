@@ -19,9 +19,13 @@ class Store extends React.Component {
     onError: throwError
   };
   static propTypes = {
-    seeds: PropTypes.array.isRequired,
-    withHandlers: PropTypes.objectOf(PropTypes.func),
-    render: PropTypes.func.isRequired
+    seeds: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired
+      })
+    ).isRequired,
+    render: PropTypes.func.isRequired,
+    withHandlers: PropTypes.objectOf(PropTypes.func)
   };
   createSeedHandlers({
     name,
@@ -36,6 +40,7 @@ class Store extends React.Component {
     const capName = cap(name);
     const loadedName = `${name}Loaded`;
     const setLoadedName = `set${cap(loadedName)}`;
+    const { onError } = this.props;
     // state setters for the seed
     const setState = state => {
       this.setState({
@@ -55,13 +60,13 @@ class Store extends React.Component {
       };
     }
     if (setable) {
-      handlers[`set${capName}`] = st => {
-        if (mergeable && typeof st !== typeof initialState) {
-          this.props.onError(
+      handlers[`set${capName}`] = state => {
+        if (mergeable && typeof state !== typeof initialState) {
+          onError(
             `cannot set ${name} because of a mergeable state cannot change type from its initialState`
           );
         }
-        setState(st);
+        setState(state);
         loadable && handlers[setLoadedName](true);
       };
     }
@@ -77,7 +82,7 @@ class Store extends React.Component {
     }
     if (mergeable) {
       if (!Array.isArray(initialState) && !isObj(initialState)) {
-        this.props.onError(
+        onError(
           `Your ${name} state is mergeable but the initialState is ${initialState}; it should be an object or array`
         );
       }
@@ -89,7 +94,7 @@ class Store extends React.Component {
         if (isObj(state) && isObj(update)) {
           return setState({ ...state, ...update });
         }
-        this.props.onError(
+        onError(
           `Cannot merge ${name} because of mismatched types. Please pass an ${
             isObj(state) ? "object" : "array"
           } to merge${capName}.`

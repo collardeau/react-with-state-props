@@ -17,8 +17,6 @@ describe("Props Handling", () => {
     expect(getProps()).toMatchSnapshot();
   });
 
-  // it breaks if seeds are not an object
-
   test("passes user props", () => {
     expect(getProps({ a: "thing" }).a).toBe("thing");
   });
