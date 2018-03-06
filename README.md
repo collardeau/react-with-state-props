@@ -51,27 +51,27 @@ const App = () => (
 
 ```
 
-## Props
+# Props
 
 A Senna store takes in the following props:
 
-### seeds
+## seeds
 
 `PropTypes.array.isRequired`
 
 An array of seed objects that will initialize our store, with the following keys:
 
-#### - name
+#### name
 `PropTypes.string.isRequired`
 
 The name of the state to be created.
 
-#### - initialState
+#### initialState
 `PropTypes.any`
 
 The initial (and reset) value of the state in question.
 
-#### - handlers
+#### handlers
 
 `PropTypes.objOf(PropTypes.func)`
 
@@ -80,9 +80,9 @@ To create custom handlers with the current state as a param.
 For example a seed with:
 
 `{ name: 'counter', initialState: 0, handlers: {incr: state => state + 1}`
-will receive `handlers.incrCounter` as a `prop`, which as suggested would increment the `counter` state by 1.
+will create `handlers.incrCounter` as a `prop`, which as suggested would increment the `counter` state by 1.
 
-#### - resetable
+#### resetable
 
 `PropTypes.objOf(PropTypes.bool)`
 default: `false`
@@ -94,7 +94,7 @@ For example a seed with:
 `{ name: 'counter', initialState: 0, resetable: true }`
 will receive `handlers.resetCounter` as a `prop`, which sets the `counter` state to 0.
 
-#### - toggleable
+#### toggleable
 
 `PropTypes.objOf(PropTypes.bool)`
 default: `false`
@@ -104,7 +104,7 @@ default: `false`
 For example a seed with:
 
 `{ name: 'isActive', initialState: false, toggleable: true }`
-will receive `handlers.toggleIsActive` as a `prop`, which will flip the state(`!state`)
+will create `handlers.toggleIsActive` as a `prop`, which will flip the state (`!state`)
 
 `toggleable: true` is a shorcut for `{ handlers: { toggle: state => !state } }`
 
