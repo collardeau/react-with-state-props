@@ -107,7 +107,7 @@ describe("Errors", () => {
           mergeable: true
         }
       ],
-      onError: spy
+      _onError: spy
     });
     expect(spy).toBeCalled();
   });
@@ -121,7 +121,7 @@ describe("Errors", () => {
           mergeable: true
         }
       ],
-      onError: spy
+      _onError: spy
     });
     expect(spy).toBeCalled();
   });
@@ -135,7 +135,7 @@ describe("Errors", () => {
           mergeable: true
         }
       ],
-      onError: spy
+      _onError: spy
     });
     const tree = comp.toJSON();
     tree.props.handlers.setUsers(0);
@@ -151,7 +151,7 @@ describe("Errors", () => {
           mergeable: true
         }
       ],
-      onError: spy
+      _onError: spy
     });
     const tree = comp.toJSON();
     tree.props.handlers.setUsers("hi");
@@ -160,7 +160,7 @@ describe("Errors", () => {
 });
 
 describe("Use cases", () => {
-  test("toggle example", () => {
+  test("toggle example using toggeable", () => {
     const comp = renderComp({
       seeds: [
         {
@@ -181,7 +181,7 @@ describe("Use cases", () => {
     expect(tree.props.active).toBe(false);
   });
 
-  test("counter example", () => {
+  test("counter example using resetable and custom handlers", () => {
     const comp = renderComp({
       seeds: [
         {
@@ -205,7 +205,7 @@ describe("Use cases", () => {
     expect(tree.props.count).toBe(0);
   });
 
-  test("with compound handlers example", () => {
+  test("using compound handlers", () => {
     const comp = renderComp({
       seeds: [
         {

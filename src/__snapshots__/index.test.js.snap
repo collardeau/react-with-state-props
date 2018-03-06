@@ -40,7 +40,7 @@ Object {
 }
 `;
 
-exports[`Use cases counter example 1`] = `
+exports[`Use cases counter example using resetable and custom handlers 1`] = `
 Object {
   "count": 1,
   "handlers": Object {
@@ -51,7 +51,7 @@ Object {
 }
 `;
 
-exports[`Use cases toggle example 1`] = `
+exports[`Use cases toggle example using toggeable 1`] = `
 Object {
   "active": true,
   "handlers": Object {
@@ -61,7 +61,7 @@ Object {
 }
 `;
 
-exports[`Use cases with compound handlers example 1`] = `
+exports[`Use cases using compound handlers 1`] = `
 Object {
   "countA": 0,
   "countB": 0,

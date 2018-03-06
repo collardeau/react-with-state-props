@@ -16,7 +16,7 @@ class Store extends React.Component {
     seeds: [],
     withHandlers: {},
     render: props => <div {...props} />,
-    onError: throwError
+    _onError: throwError
   };
   static propTypes = {
     seeds: PropTypes.arrayOf(
@@ -25,7 +25,8 @@ class Store extends React.Component {
       })
     ).isRequired,
     render: PropTypes.func.isRequired,
-    withHandlers: PropTypes.objectOf(PropTypes.func)
+    withHandlers: PropTypes.objectOf(PropTypes.func),
+    _onError: PropTypes.func
   };
   createSeedHandlers({
     name,
@@ -40,7 +41,7 @@ class Store extends React.Component {
     const capName = cap(name);
     const loadedName = `${name}Loaded`;
     const setLoadedName = `set${cap(loadedName)}`;
-    const { onError } = this.props;
+    const { _onError: onError } = this.props;
     // state setters for the seed
     const setState = state => {
       this.setState({
@@ -150,7 +151,7 @@ class Store extends React.Component {
 
   render() {
     const userProps = omit(
-      ["seeds", "render", "withHandlers", "onError"],
+      ["seeds", "render", "withHandlers", "_onError"],
       this.props
     );
     return this.props.render({ ...this.state, ...userProps });
