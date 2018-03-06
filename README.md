@@ -75,12 +75,30 @@ The initial (and reset) value of the state being seeded.
 
 #### - handlers `PropTypes.objOf(PropTypes.func)`
 
-Here, you can create handlers using the current state as a parameter.
+Here, you can create handlers using the current state as a parameter:
 
-For example a seed with:
+```javascript
 
-`{ name: 'counter', initialState: 0, handlers: {incr: state => state + 1}`
-will create `handlers.incrCounter` as a `prop`, which increments the `counter` state by 1.
+const seed = {
+  name: 'counter',
+  initialState: 0,
+  handlers: {
+    incr: state => state + 1
+  }
+}
+/*
+results in these props:
+{
+  counter: 0,
+  handlers: {
+    setCounter: [Function],
+    incrCounter: [Function],
+  }
+}
+*/
+
+```
+The `props.handlers.incrCounter` function increments the `counter` state by 1
 
 #### - resetable `PropTypes.bool`
 
@@ -92,14 +110,34 @@ default: `false`
 
 default: `false`
 
-`toggleable: true` will create a handler that will set the state to its opposite.
-
-For example a seed with:
+`toggleable: true` will create a handler that will set the state to its opposite:
 
 `{ name: 'isActive', initialState: false, toggleable: true }`
 will create `handlers.toggleIsActive` as a `prop`, which will flip the state (`!state`)
 
-`toggleable: true` is a shorcut for `{ handlers: { toggle: state => !state } }`
+```javascript
+
+const seed = {
+  name: 'isActive',
+  initialState: false,
+  toggleable: true
+}
+/*
+results in these props:
+{
+  isActive: false,
+  handlers: {
+    setIsActive: [Function],
+    toggleActive: [Function],
+  }
+}
+*/
+
+```
+
+`props.handlers.toggleIsActive` which will flip the state of `isActive`
+
+`toggleable: true` could also be written as `{ handlers: { toggle: state => !state } }`
 
 #### - loadable `PropTypes.bool`
 
