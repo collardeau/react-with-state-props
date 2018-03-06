@@ -48,6 +48,13 @@ export class Store extends React.Component {
     const setLoadedName = `set${cap(loadedName)}`;
     const { _onError: onError } = this.props;
     // state setters for the seed
+    const setLoadedState = (state, cb) => {
+      if (loadable) {
+        this.setState({
+          [loadedName]: true
+        });
+      }
+    };
     const setState = (state, cb) => {
       this.setState(
         {
@@ -55,11 +62,7 @@ export class Store extends React.Component {
         },
         cb
       );
-    };
-    const setLoadedState = state => {
-      this.setState({
-        [loadedName]: state
-      });
+      setLoadedState();
     };
     let handlers = {}; // aggregrate handlers
     // create default handlers
@@ -74,7 +77,6 @@ export class Store extends React.Component {
           );
         }
         setState(state, cb);
-        loadable && handlers[setLoadedName](true);
       };
     }
     if (resetable) {

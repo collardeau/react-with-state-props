@@ -102,8 +102,8 @@ describe("setState callback", () => {
   });
 });
 
-describe("Flags", () => {
-  test("loaded flag", () => {
+describe("loaded Flag", () => {
+  test("with set", () => {
     const comp = renderComp({
       seeds: [
         {
@@ -119,8 +119,44 @@ describe("Flags", () => {
     tree = comp.toJSON();
     expect(tree.props.usersLoaded).toBe(true);
   });
+  test("with toggle", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "isLoggedIn",
+          initialState: false,
+          loadable: true,
+          toggleable: true
+        }
+      ]
+    });
+    let tree = comp.toJSON();
+    expect(tree.props.isLoggedInLoaded).toBe(false);
+    tree.props.handlers.toggleIsLoggedIn();
+    tree = comp.toJSON();
+    expect(tree.props.isLoggedInLoaded).toBe(true);
+  });
+  test("with merge", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "users",
+          initialState: {},
+          loadable: true,
+          mergeable: true
+        }
+      ]
+    });
+    let tree = comp.toJSON();
+    expect(tree.props.usersLoaded).toBe(false);
+    tree.props.handlers.mergeUsers({ some: "users" });
+    tree = comp.toJSON();
+    expect(tree.props.usersLoaded).toBe(true);
+  });
+});
 
-  test("mergeable with objects", () => {
+describe("mergeable", () => {
+  test("with objects", () => {
     const comp = renderComp({
       seeds: [
         {
@@ -138,7 +174,7 @@ describe("Flags", () => {
     expect(tree.props.users.b).toBe("b");
   });
 
-  test("mergeable with arrays", () => {
+  test("with arrays", () => {
     const comp = renderComp({
       seeds: [
         {
