@@ -74,7 +74,7 @@ The initial (and reset) value of the state being seeded.
 
 #### handlers `PropTypes.objOf(PropTypes.func)`
 
-To create custom handlers with the current state as a param.
+Here, you can create handlers using the current state as a parameter.
 
 For example a seed with:
 
