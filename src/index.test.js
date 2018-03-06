@@ -217,6 +217,21 @@ describe("Errors", () => {
     tree.props.handlers.setUsers("hi");
     expect(spy).toBeCalled();
   });
+  test("mergeable and toggleable", () => {
+    const spy = jest.fn();
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "users",
+          initialState: {},
+          mergeable: true,
+          toggleable: true
+        }
+      ],
+      _onError: spy
+    });
+    expect(spy).toBeCalled();
+  });
 });
 
 describe("Use cases", () => {

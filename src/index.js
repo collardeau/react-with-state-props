@@ -82,6 +82,11 @@ export class Store extends React.Component {
       };
     }
     if (mergeable) {
+      if (toggleable) {
+        onError(
+          `State cannot be both mergeable and toggleable. Check your "${name}" state.`
+        );
+      }
       if (!Array.isArray(initialState) && !isObj(initialState)) {
         onError(
           `Your ${name} state is mergeable but the initialState is ${initialState}; it should be an object or array`
