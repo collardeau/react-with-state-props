@@ -112,9 +112,6 @@ default: `false`
 
 `toggleable: true` will create a handler that will set the state to its opposite:
 
-`{ name: 'isActive', initialState: false, toggleable: true }`
-will create `handlers.toggleIsActive` as a `prop`, which will flip the state (`!state`)
-
 ```javascript
 
 const seed = {
