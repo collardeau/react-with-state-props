@@ -107,3 +107,44 @@ will create `handlers.toggleIsActive` as a `prop`, which will flip the state (`!
 
 `toggleable: true` is a shorcut for `{ handlers: { toggle: state => !state } }`
 
+## withHandlers
+
+`PropTypes.objOf(PropTypes.func)`
+
+`withHandlers` takes an object of high-order functions.
+
+Here you can access the `react-senna` props so you can you create more complex state changes.
+For example:
+
+```javascript
+
+const seeds = [
+  {
+    name: "counterA",
+    initialState: 0
+  },
+  {
+    name: "counterA",
+    initialState: 0
+  }
+];
+
+const withHandlers = {
+  setAll: ({ handlers }) => num => {
+    // run multiple react-senna handlers
+    setCounterA(num);
+    setCounterB(num);
+  }
+};
+
+const App = () => (
+  <Store
+    seeds={seeds}
+    withHandlers={withHandlers}
+    // use new `props.handlers.setAll` in render:
+    render={({ handlers }) => (
+      <button onClick={() => handlers.setAll(10)}>set all counters to 10</button>
+    )}
+  />
+)
+```
