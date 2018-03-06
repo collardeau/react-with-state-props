@@ -59,11 +59,13 @@ A Senna store takes in the following props:
 
 The component to render which will receive Senna props!
 
-### seeds `PropTypes.array.isRequired`
+### seeds
+`PropTypes.array.isRequired`
 
 An array of seed objects that will initialize the Senna store, with the following keys:
 
-##### name `PropTypes.string.isRequired`
+##### name
+`PropTypes.string.isRequired`
 
 The name of the state to be created.
 
@@ -86,9 +88,7 @@ default: `false`
 
 `resetable: true` will create a handler that will set the state to its initial value.
 
-##### toggleable
-
-`PropTypes.objOf(PropTypes.bool)`
+##### toggleable `PropTypes.objOf(PropTypes.bool)`
 
 default: `false`
 
@@ -102,7 +102,6 @@ will create `handlers.toggleIsActive` as a `prop`, which will flip the state (`!
 `toggleable: true` is a shorcut for `{ handlers: { toggle: state => !state } }`
 
 ### withHandlers
-
 `PropTypes.objOf(PropTypes.func)`
 
 `withHandlers` takes an object of high-order functions.
