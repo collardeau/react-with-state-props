@@ -6,11 +6,11 @@
 
 A store component to quickly initialize state and `setState` handlers in React.
 
-## Installation
+# Installation
 
 `npm install react-senna --save`
 
-## Usage
+# Usage
 
 ```javascript
 import React from "react";
@@ -51,15 +51,15 @@ const App = () => (
 
 ```
 
-## Available Props
+# Available Props
 
 The Store component accepts the following props: `render`, `seeds` and `withHandlers`.
 
-### render
+## render
 
 The component to render which will receive `react-senna` props!
 
-### seeds
+## seeds
 `PropTypes.array.isRequired`
 
 An array of seed objects that will initialize the store, which have **the following keys**:
@@ -100,7 +100,7 @@ will create `handlers.toggleIsActive` as a `prop`, which will flip the state (`!
 
 `toggleable: true` is a shorcut for `{ handlers: { toggle: state => !state } }`
 
-### withHandlers
+## withHandlers
 `PropTypes.objOf(PropTypes.func)`
 
 `withHandlers` takes an object of high-order functions.
