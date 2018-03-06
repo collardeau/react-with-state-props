@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import omit from "ramda/src/omit";
-import { cap, isObj, throwError } from "./utils";
+import { cap, isObj, throwError, omit } from "./utils";
 
 function createUserHandlers(state, fns) {
   let handlers = {};
