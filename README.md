@@ -53,7 +53,7 @@ const App = () => (
 
 ## Available Props
 
-The Store component accepts the following props, `render`, `seeds` and `withHandlers`:
+The Store component accepts the following props: `render`, `seeds` and `withHandlers`.
 
 ### render
 
