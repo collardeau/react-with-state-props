@@ -20,7 +20,13 @@ export class Store extends React.Component {
   static propTypes = {
     seeds: PropTypes.arrayOf(
       PropTypes.shape({
-        name: PropTypes.string.isRequired
+        name: PropTypes.string.isRequired,
+        handlers: PropTypes.objectOf(PropTypes.func),
+        setable: PropTypes.bool,
+        resetable: PropTypes.bool,
+        toggleable: PropTypes.bool,
+        mergeable: PropTypes.bool,
+        loadable: PropTypes.bool
       })
     ).isRequired,
     render: PropTypes.func.isRequired,
