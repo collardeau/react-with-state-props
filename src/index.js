@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import omit from "ramda/src/omit";
 
 function createUserHandlers(state, fns) {
@@ -14,6 +15,11 @@ class Store extends React.Component {
     seeds: [],
     withHandlers: {},
     render: props => <div {...props} />
+  };
+  static propTypes = {
+    seeds: PropTypes.array.isRequired,
+    withHandlers: PropTypes.objectOf(PropTypes.func),
+    render: PropTypes.func.isRequired
   };
   createSeedHandlers({
     name,
