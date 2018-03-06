@@ -116,7 +116,7 @@ const seeds = [
     initialState: 0
   },
   {
-    name: "counterA",
+    name: "counterB",
     initialState: 0
   }
 ];
@@ -124,8 +124,8 @@ const seeds = [
 const withHandlers = {
   setAll: ({ handlers }) => num => {
     // run multiple react-senna handlers
-    setCounterA(num);
-    setCounterB(num);
+    handlers.setCounterA(num);
+    handlers.setCounterB(num);
   }
 };
 
@@ -134,8 +134,16 @@ const App = () => (
     seeds={seeds}
     withHandlers={withHandlers}
     // use new `props.handlers.setAll` in render:
-    render={({ handlers }) => (
-      <button onClick={() => handlers.setAll(10)}>set all counters to 10</button>
+    render={({ handlers, counterA, counterB }) => (
+       <div>
+        A: {props.counterA}
+        <br />
+        B: {props.counterB}
+        <br />
+        <button onClick={() => handlers.setAll(10)}>
+          set all counters to 10
+        </button>
+      </div
     )}
   />
 )
