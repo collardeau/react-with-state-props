@@ -8,3 +8,7 @@ script:
   - npm test #Runs Tests
   - npm run build:production #Creates a production build
   - npm run coverage
+
+  # Send coverage data to Coveralls
+after_script: "cat coverage/lcov.info |
+node_modules/coveralls/bin/coveralls.js"
