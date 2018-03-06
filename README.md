@@ -6,11 +6,11 @@
 
 A store component to quickly initialize state and `setState` handlers in React.
 
-# Installation
+## Installation
 
 `npm install react-senna --save`
 
-# Usage
+## Usage
 
 ```javascript
 import React from "react";
@@ -51,13 +51,14 @@ const App = () => (
 
 ```
 
-# Available Props
+# Props API
 
 The Store component accepts the following props: `render`, `seeds` and `withHandlers`.
 
 ## render
+`PropTypes.func.isRequired`
 
-The component to render which will receive `react-senna` props!
+A component to render which will receive `react-senna` props!
 
 ## seeds
 `PropTypes.array.isRequired`
