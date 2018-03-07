@@ -152,13 +152,11 @@ export class Store extends React.Component {
   init() {
     const { seeds, withHandlers } = this.props;
     const state = this.createStateFromSeeds(seeds);
-    const handlers = createUserHandlers(state, withHandlers);
+    const userHandlers = createUserHandlers(state, withHandlers);
+    const handlers = { ...state.handlers, ...userHandlers };
     return {
       ...state,
-      handlers: {
-        ...state.handlers,
-        ...handlers
-      }
+      handlers: omit(this.props.omitHandlers, handlers)
     };
   }
 

@@ -270,27 +270,48 @@ describe("Errors", () => {
   });
 });
 
-describe("omit handlers", () => {
-  test("typical omit case", () => {
+describe("omitHandlers Prop", () => {
+  test("omit case with toggeable", () => {
     const comp = renderComp({
       seeds: [
         {
-          name: "count",
+          name: "active",
+          initialState: false,
+          toggeable: true
+        }
+      ],
+      omitHandlers: ["setActive"]
+    });
+
+    let tree = comp.toJSON();
+    expect(tree.props.handlers.setActive).toBe(undefined);
+  });
+  test("omit case using withHandlers", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "countA",
+          initialState: 0
+        },
+        {
+          name: "countB",
           initialState: 0
         }
       ],
       withHandlers: {
-        set100: props => () => {
-          props.handlers.setCount(100);
+        resetAll: props => () => {
+          props.handlers.setCountA(0);
+          props.handlers.setCountB(0);
         }
       },
-      omitHandlers: ["setCount"]
+      omitHandlers: ["setCountA", "setCountB"]
     });
 
     let tree = comp.toJSON();
-    tree.props.handlers.set100();
     tree = comp.toJSON();
-    expect(tree.props.handlers.setCount).toBe(undefined);
+    expect(tree.props.handlers.resetAll).toBeDefined();
+    expect(tree.props.handlers.setCountA).toBe(undefined);
+    expect(tree.props.handlers.setCountB).toBe(undefined);
   });
 });
 
