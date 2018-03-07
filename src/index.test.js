@@ -270,6 +270,30 @@ describe("Errors", () => {
   });
 });
 
+describe("omit handlers", () => {
+  test("typical omit case", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "count",
+          initialState: 0
+        }
+      ],
+      withHandlers: {
+        set100: props => () => {
+          props.handlers.setCount(100);
+        }
+      },
+      omitHandlers: ["setCount"]
+    });
+
+    let tree = comp.toJSON();
+    tree.props.handlers.set100();
+    tree = comp.toJSON();
+    expect(tree.props.handlers.setCount).toBe(undefined);
+  });
+});
+
 describe("Use cases", () => {
   test("toggle example using toggeable", () => {
     const comp = renderComp({
