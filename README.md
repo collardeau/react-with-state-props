@@ -20,7 +20,7 @@ import { Store } from "react-senna";
 const seeds = [
   {
     name: "todos",
-    initialState: {},
+    initialState: [],
   }
 ];
 
@@ -32,7 +32,7 @@ const App = () => (
       console.log(props);
       /*
       {
-        todos: {}
+        todos: []
         handlers: {
           setTodos: [Function]
         }
@@ -182,7 +182,7 @@ const withHandlers = {
   }
 };
 
-const App = () => (
+const SennaApp = () => (
   <Store
     seeds={seeds}
     withHandlers={withHandlers}
@@ -202,35 +202,52 @@ const App = () => (
 )
 ```
 
-You can run async stuff too in `withHandlers`:
+## omitHandlers `array`
+
+Remove handlers before the props are passed on to the render function. This is good place to remove handlers your used in `withHandlers` but don't want to pass forward:
 
 ```javascript
 
 const seeds = [
   {
-    name: "users",
+    name: "movies",
     initialState: {}
   }
 ];
-
 const withHandlers = {
-  get: ({ handlers }) => () => {
-    setTimeout(() => {
-      handlers.setUsers(
-        {
-          some: "users"
-        },
-        1000
-      );
+  fetchMovies: ({ handlers }) => () => {
+    // some imaginary db
+    db.fetchMovies().then(movies => {
+      handlers.setMovies(movies);
     });
   }
 };
 
-// creates a `handlers.getUsers` prop
+// we want to drop `setMOvies` (and only pass on `fetchMovies`)
+const omitHandlers = ["setMovies"];
 
+const SennaApp = () => (
+  <Store
+    seeds={seeds}
+    withHandlers={withHandlers}
+    omitHandlers={omitHandlers}
+    render={props => {
+      /* 
+      {
+        movies: {}
+        handlers: {
+          fetchMovies: [Function]
+        }
+      }
+      do as you please with the props: 
+      */
+      return <MyApp {...props} />;
+    }}
+  />
+)
 ```
 
-## Inspirations
+# Inspirations
 
 - Andrew Clark's [recompose](https://github.com/acdlite/recompose) library
 - Kent C. Dodds Advanced React Component Patterns [Egghead course](https://egghead.io/courses/advanced-react-component-patterns)
