@@ -122,13 +122,13 @@ results in these props:
 
 ```
 
-`props.handlers.toggleIsActive` which will flip the state of `isActive`
+The resulting `props.handlers.toggleIsActive` which will flip the state of `isActive`
 
-In fact, `toggleable: true` could also be written as `{ handlers: { toggle: state => !state } }`
+In fact, `toggleable: true` is a shortcut for `{ handlers: { toggle: state => !state } }`
 
-#### - loadable `bool` default: `false`
+#### loadable `bool` default: `false`
 
-`loadable: true` creates a loaded state:
+`loadable: true` creates an additional loaded state:
 
 ```javascript
 
@@ -151,10 +151,10 @@ results in these props:
 
 ```
 
-In the example, `usersLoaded` is automatically set to `true` when `users` is updated.
+`usersLoaded` is automatically set to `true` when `users` is updated.
 
 
-#### - resetable `bool` default: `false`
+#### resetable `bool` default: `false`
 
 `resetable: true` will create a handler that will set the state to its initialState. For example, `resetCounter`.
 
@@ -162,7 +162,7 @@ In the example, `usersLoaded` is automatically set to `true` when `users` is upd
 
 `withHandlers` takes an object of high-order functions.
 
-Here you can access the `react-senna` props so you can you create more complex state changes.
+Here you can access the `react-senna` created props so you can you create more complex state changes.
 For example, controlling two separate counter states:
 
 ```javascript
@@ -180,7 +180,7 @@ const seeds = [
 
 const withHandlers = {
   setAll: ({ handlers }) => num => {
-    // run multiple react-senna handlers
+    // run multiple handlers
     handlers.setCounterA(num);
     handlers.setCounterB(num);
   }
@@ -206,7 +206,7 @@ const App = () => (
 )
 ```
 
-You can do aysnc stuff too in `withHandlers`:
+You can run async stuff too in `withHandlers`:
 
 ```javascript
 
