@@ -25,7 +25,7 @@ const seeds = [
 ];
 
 // Use the Store component to initiate React state, with setState handlers
-const App = () => (
+const SennaApp = () => (
   <Store
     seeds={seeds}
     render={props => {
@@ -38,7 +38,7 @@ const App = () => (
         }
       }
       */
-      return <div />; // render whatever you want with the state and handler you just created!
+      return <App {...props} />; // render whatever you want with the state and handler you just created!
     }}
   />
 )
@@ -49,7 +49,7 @@ You can easily create more handlers out of the box. Read on!
 
 # Props API
 
-The Store component accepts the following props: `render`, `seeds`, `withHandlers` and `omitHandlers`.
+The Store component accepts the following props: `render`, `seeds`, `withHandlers`,  `omitHandlers` and `flatten`.
 
 ## render `func.isRequired`
 
@@ -86,7 +86,7 @@ results in these props:
   counter: 0,
   handlers: {
     setCounter: [Function],
-    incrCounter: [Function],
+    incrCounter: [Function]
   }
 }
 */
@@ -152,7 +152,7 @@ results in these props:
 
 #### resetable `bool` default: `false`
 
-`resetable: true` will create a handler that will set the state to its initialState. For example, `resetCounter`.
+`resetable: true` will create a handler that will set the state to its initialState. For example, `handlers.resetCounter`.
 
 ## withHandlers `objOf(func)`
 
@@ -232,6 +232,7 @@ const SennaApp = () => (
     withHandlers={withHandlers}
     omitHandlers={omitHandlers}
     render={props => {
+      console.log(props)
       /* 
       {
         movies: {}
@@ -245,6 +246,41 @@ const SennaApp = () => (
     }}
   />
 )
+```
+
+## flatten `bool`
+
+default: `false`
+
+If you don't like the `handlers` key you don't have to use it:
+
+```javascript
+
+const seeds = [
+  {
+    name: "movies",
+    initialState: {}
+  }
+];
+
+const SennaApp = () => (
+  <Store
+    seeds={seeds}
+    flatten={true}
+    render={props => {
+      console.log(props)
+      /* 
+      {
+        movies: {},
+        setMovies: [Function]
+      }
+      no `handlers` key
+      */
+      return <MyApp {...props} />;
+    }}
+  />
+);
+
 ```
 
 # Inspirations
