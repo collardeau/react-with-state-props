@@ -14,6 +14,7 @@ export class Store extends React.Component {
   static defaultProps = {
     seeds: [],
     withHandlers: {},
+    omitHandlers: [],
     render: props => <div {...props} />,
     _onError: throwError
   };
@@ -29,6 +30,7 @@ export class Store extends React.Component {
         loadable: PropTypes.bool
       })
     ).isRequired,
+    omitHandlers: PropTypes.array,
     render: PropTypes.func.isRequired,
     withHandlers: PropTypes.objectOf(PropTypes.func),
     _onError: PropTypes.func
@@ -150,13 +152,11 @@ export class Store extends React.Component {
   init() {
     const { seeds, withHandlers } = this.props;
     const state = this.createStateFromSeeds(seeds);
-    const handlers = createUserHandlers(state, withHandlers);
+    const userHandlers = createUserHandlers(state, withHandlers);
+    const handlers = { ...state.handlers, ...userHandlers };
     return {
       ...state,
-      handlers: {
-        ...state.handlers,
-        ...handlers
-      }
+      handlers: omit(this.props.omitHandlers, handlers)
     };
   }
 
@@ -164,7 +164,7 @@ export class Store extends React.Component {
 
   render() {
     const userProps = omit(
-      ["seeds", "render", "withHandlers", "_onError"],
+      ["seeds", "render", "withHandlers", "omitHandlers", "_onError"],
       this.props
     );
     return this.props.render({ ...this.state, ...userProps });

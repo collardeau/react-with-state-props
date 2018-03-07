@@ -6,10 +6,13 @@ export function isObj(thing) {
   );
 }
 
-export function omit(blacklisted, obj) {
-  return Object.keys(obj)
-    .filter(key => blacklisted.indexOf(key) < 0)
-    .reduce((newObj, key) => Object.assign(newObj, { [key]: obj[key] }), {});
+export function omit(blacklisted, data) {
+  return Object.keys(data)
+    .filter(key => !blacklisted.includes(key))
+    .reduce((obj, key) => {
+      obj[key] = data[key];
+      return obj;
+    }, {});
 }
 
 export function cap(string) {

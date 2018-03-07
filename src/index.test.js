@@ -270,6 +270,51 @@ describe("Errors", () => {
   });
 });
 
+describe("omitHandlers Prop", () => {
+  test("omit case with toggeable", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "active",
+          initialState: false,
+          toggeable: true
+        }
+      ],
+      omitHandlers: ["setActive"]
+    });
+
+    let tree = comp.toJSON();
+    expect(tree.props.handlers.setActive).toBe(undefined);
+  });
+  test("omit case using withHandlers", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "countA",
+          initialState: 0
+        },
+        {
+          name: "countB",
+          initialState: 0
+        }
+      ],
+      withHandlers: {
+        resetAll: props => () => {
+          props.handlers.setCountA(0);
+          props.handlers.setCountB(0);
+        }
+      },
+      omitHandlers: ["setCountA", "setCountB"]
+    });
+
+    let tree = comp.toJSON();
+    tree = comp.toJSON();
+    expect(tree.props.handlers.resetAll).toBeDefined();
+    expect(tree.props.handlers.setCountA).toBe(undefined);
+    expect(tree.props.handlers.setCountB).toBe(undefined);
+  });
+});
+
 describe("Use cases", () => {
   test("toggle example using toggeable", () => {
     const comp = renderComp({
