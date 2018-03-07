@@ -24,7 +24,7 @@ const seeds = [
   }
 ];
 
-// Use the Store component to initiate React state, with setState handlers
+// Use the Store component to initiate React state and setState handlers
 const SennaApp = () => (
   <Store
     seeds={seeds}
