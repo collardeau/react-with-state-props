@@ -164,7 +164,7 @@ In the example, `usersLoaded` is automatically set to `true` when `users` is upd
 
 default: `false`
 
-`resetable: true` will create a handler that will set the state to its initial value. For example, `resetCounter`.
+`resetable: true` will create a handler that will set the state to its initialState. For example, `resetCounter`.
 
 ## withHandlers
 `PropTypes.objOf(PropTypes.func)`
@@ -202,9 +202,9 @@ const App = () => (
     // use new `props.handlers.setAll` in render:
     render={({ handlers, counterA, counterB }) => (
        <div>
-        A: {props.counterA}
+        A: {counterA}
         <br />
-        B: {props.counterB}
+        B: {counterB}
         <br />
         <button onClick={() => handlers.setAll(10)}>
           set all counters to 10
