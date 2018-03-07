@@ -24,7 +24,7 @@ const seeds = [
   }
 ];
 
-// Use the Store component to initiate React state, with handlers to update that state
+// Use the Store component to initiate React state, with setState handlers
 const App = () => (
   <Store
     seeds={seeds}
@@ -49,11 +49,11 @@ You can easily create more handlers out of the box. Read on!
 
 # Props API
 
-The Store component accepts the following props: `render`, `seeds` and `withHandlers`.
+The Store component accepts the following props: `render`, `seeds`, `withHandlers` and `omitHandlers`.
 
 ## render `func.isRequired`
 
-Your render function which will receive `react-senna` props to manipulate state!
+Your render function which will receive `react-senna` props!
 
 ## seeds `array.isRequired`
 
@@ -118,7 +118,7 @@ results in these props:
 
 ```
 
-The resulting `props.handlers.toggleIsActive` which will flip the state of `isActive`
+The resulting `props.handlers.toggleIsActive` will flip the state of `isActive`
 
 In fact, `toggleable: true` is a shortcut for `{ handlers: { toggle: state => !state } }`
 
@@ -204,7 +204,7 @@ const SennaApp = () => (
 
 ## omitHandlers `array`
 
-Remove handlers before the props are passed on to the render function. This is good place to remove handlers your used in `withHandlers` but don't want to pass forward:
+Remove handlers before the props are passed on to the render function. This is good place to remove handlers you used in `withHandlers` but don't want to pass forward:
 
 ```javascript
 
