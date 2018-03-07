@@ -4,11 +4,11 @@
 
 # react-senna
 
-A store component to quickly initialize state and `setState` handlers in React.
+A store component to quickly initialize state and state handlers in React.
 
 ## Installation
 
-`npm install react-senna --save`
+`npm install react-senna`
 
 ## Usage
 
@@ -55,25 +55,23 @@ const App = () => (
 
 The Store component accepts the following props: `render`, `seeds` and `withHandlers`.
 
-## render
-`PropTypes.func.isRequired`
+## render `func.isRequired`
 
-A component to render which will receive `react-senna` props!
+Your render function which will receive `react-senna` props!
 
-## seeds
-`PropTypes.array.isRequired`
+## seeds `array.isRequired`
 
 An array of seed objects that will initialize the store, which have **the following keys**:
 
-#### - name `PropTypes.string.isRequired`
+#### name `string.isRequired`
 
 The name of the state to be created.
 
-#### - initialState `PropTypes.any`
+#### initialState `any`
 
 The initial (and reset) value of the state being seeded.
 
-#### - handlers `PropTypes.objOf(PropTypes.func)`
+#### handlers `objOf(func)`
 
 Here, you can create handlers using the current state as a parameter:
 
@@ -98,11 +96,9 @@ results in these props:
 */
 
 ```
-The `props.handlers.incrCounter` function increments the `counter` state by 1
+The resulting `props.handlers.incrCounter` function increments the `counter` state by 1
 
-#### - toggleable `PropTypes.bool`
-
-default: `false`
+#### toggleable `bool` default: `false`
 
 `toggleable: true` will create a handler that will set the state to its opposite:
 
@@ -130,9 +126,7 @@ results in these props:
 
 In fact, `toggleable: true` could also be written as `{ handlers: { toggle: state => !state } }`
 
-#### - loadable `PropTypes.bool`
-
-default: `false`
+#### - loadable `bool` default: `false`
 
 `loadable: true` creates a loaded state:
 
@@ -160,14 +154,11 @@ results in these props:
 In the example, `usersLoaded` is automatically set to `true` when `users` is updated.
 
 
-#### - resetable `PropTypes.bool`
-
-default: `false`
+#### - resetable `bool` default: `false`
 
 `resetable: true` will create a handler that will set the state to its initialState. For example, `resetCounter`.
 
-## withHandlers
-`PropTypes.objOf(PropTypes.func)`
+## withHandlers `objOf(func)`
 
 `withHandlers` takes an object of high-order functions.
 
