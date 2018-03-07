@@ -33,6 +33,7 @@ export class Store extends React.Component {
     omitHandlers: PropTypes.array,
     render: PropTypes.func.isRequired,
     withHandlers: PropTypes.objectOf(PropTypes.func),
+    flatten: PropTypes.bool,
     _onError: PropTypes.func
   };
   createSeedHandlers({
@@ -150,13 +151,19 @@ export class Store extends React.Component {
   }
 
   init() {
-    const { seeds, withHandlers } = this.props;
+    const { seeds, withHandlers, omitHandlers } = this.props;
     const state = this.createStateFromSeeds(seeds);
     const userHandlers = createUserHandlers(state, withHandlers);
-    const handlers = { ...state.handlers, ...userHandlers };
+    const handlers = omit(omitHandlers, { ...state.handlers, ...userHandlers });
+    if (this.props.flatten) {
+      return {
+        ...omit("handlers", state),
+        ...handlers
+      };
+    }
     return {
       ...state,
-      handlers: omit(this.props.omitHandlers, handlers)
+      handlers
     };
   }
 
@@ -164,7 +171,14 @@ export class Store extends React.Component {
 
   render() {
     const userProps = omit(
-      ["seeds", "render", "withHandlers", "omitHandlers", "_onError"],
+      [
+        "seeds",
+        "render",
+        "withHandlers",
+        "omitHandlers",
+        "flatten",
+        "_onError"
+      ],
       this.props
     );
     return this.props.render({ ...this.state, ...userProps });

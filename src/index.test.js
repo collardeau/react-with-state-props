@@ -315,6 +315,23 @@ describe("omitHandlers Prop", () => {
   });
 });
 
+describe("flatten", () => {
+  test("typical flatten handlers case", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "todos",
+          initialState: []
+        }
+      ],
+      flatten: true
+    });
+    let tree = comp.toJSON();
+    expect(tree.props.setTodos).toBeDefined();
+    expect(tree.props.handlers).toBeUndefined();
+  });
+});
+
 describe("Use cases", () => {
   test("toggle example using toggeable", () => {
     const comp = renderComp({
