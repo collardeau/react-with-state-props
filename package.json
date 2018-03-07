@@ -1,7 +1,7 @@
 {
   "name": "react-senna",
-  "version": "0.2.1",
-  "description": "initialize state and handlers for React",
+  "version": "0.3.0",
+  "description": "easy React state",
   "repository": {
     "type": "git",
     "url": "https://github.com/collardeau/react-senna"
