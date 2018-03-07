@@ -53,7 +53,7 @@ The Store component accepts the following props: `render`, `seeds` and `withHand
 
 ## render `func.isRequired`
 
-Your render function which will receive `react-senna` props!
+Your render function which will receive `react-senna` props to manipulate state!
 
 ## seeds `array.isRequired`
 
