@@ -38,7 +38,8 @@ const SennaApp = () => (
         }
       }
       */
-      return <App {...props} />; // render whatever you want with the state and handler you just created!
+      // render whatever you want with the state and handler you just created!
+      return <App {...props} />;
     }}
   />
 )
@@ -86,7 +87,7 @@ results in these props:
   counter: 0,
   handlers: {
     setCounter: [Function],
-    incrCounter: [Function]
+    incrCounter: [Function]  <-- new handler
   }
 }
 */
@@ -111,7 +112,7 @@ results in these props:
   isActive: false,
   handlers: {
     setIsActive: [Function],
-    toggleIsActive: [Function],
+    toggleIsActive: [Function],  <-- new handler
   }
 }
 */
@@ -137,10 +138,10 @@ const seed = {
 results in these props:
 {
   users: {},
-  usersLoaded: false
+  usersLoaded: false   <-- new state
   handlers: {
     setUsers: [Function],
-    setUsersLoaded: [Function],
+    setUsersLoaded: [Function],  <-- new handler
   }
 }
 */
@@ -236,7 +237,7 @@ const SennaApp = () => (
       /* 
       {
         movies: {}
-        handlers: {
+        handlers: {   <-- without `setMovies`
           fetchMovies: [Function]
         }
       }
@@ -272,9 +273,8 @@ const SennaApp = () => (
       /* 
       {
         movies: {},
-        setMovies: [Function]
+        setMovies: [Function]   <-- without the `handlers` key
       }
-      no `handlers` key
       */
       return <MyApp {...props} />;
     }}
