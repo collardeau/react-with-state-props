@@ -45,7 +45,7 @@ const App = () => (
 
 ```
 
-You can easily create more handlers out of the box.
+You can easily create more handlers out of the box. Read on!
 
 # Props API
 
