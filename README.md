@@ -233,3 +233,11 @@ const withHandlers = {
 // creates a `handlers.getUsers` prop
 
 ```
+
+## Inspirations
+
+- Andrew Clark's [recompose](https://github.com/acdlite/recompose) library
+- Kent C. Dodds Advanced React Component Patterns [Egghead course](https://egghead.io/courses/advanced-react-component-patterns)
+- Never Write Another HOC [talk](https://www.youtube.com/watch?v=BcVAq3YFiuc) by Michael Jackson 
+
+
