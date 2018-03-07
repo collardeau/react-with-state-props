@@ -19,12 +19,8 @@ import { Store } from "react-senna";
 // describe the state you want in a `seeds` array, for example:
 const seeds = [
   {
-    name: "counter",
-    initialState: 0,
-    resetable: true,
-    handlers: {
-      incr: state => state + 1
-    }
+    name: "todos",
+    initialState: {},
   }
 ];
 
@@ -36,20 +32,20 @@ const App = () => (
       console.log(props);
       /*
       {
-        counter: 0
+        todos: {}
         handlers: {
-          setCounter: [Function],
-          incrCounter: [Function],
-          resetCounter: [Function]
+          setTodos: [Function]
         }
       }
       */
-      return <div />; // render whatever you want with the state and handlers you just created!
+      return <div />; // render whatever you want with the state and handler you just created!
     }}
   />
 )
 
 ```
+
+You can easily create more handlers out of the box.
 
 # Props API
 
