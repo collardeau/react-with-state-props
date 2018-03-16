@@ -270,6 +270,31 @@ describe("Errors", () => {
   });
 });
 
+describe("withHandlers Prop", () => {
+  test("use updated props", () => {
+    const comp = renderComp({
+      seeds: [
+        {
+          name: "countA",
+          initialState: 0
+        }
+      ],
+      withHandlers: {
+        addOne: props => num => {
+          props.handlers.setCountA(props.countA + 1);
+        }
+      }
+    });
+    let tree = comp.toJSON();
+    tree.props.handlers.addOne();
+    tree = comp.toJSON();
+    expect(tree.props.countA).toBe(1);
+    tree.props.handlers.addOne();
+    tree = comp.toJSON();
+    expect(tree.props.countA).toBe(2);
+  });
+});
+
 describe("omitHandlers Prop", () => {
   test("omit case with toggeable", () => {
     const comp = renderComp({
@@ -371,6 +396,9 @@ describe("Use cases", () => {
     tree.props.handlers.incrCount();
     tree = comp.toJSON();
     expect(tree.props.count).toBe(1);
+    tree.props.handlers.incrCount();
+    tree = comp.toJSON();
+    expect(tree.props.count).toBe(2);
     tree.props.handlers.resetCount();
     tree = comp.toJSON();
     expect(tree.props.count).toBe(0);

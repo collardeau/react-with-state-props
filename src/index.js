@@ -2,14 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { cap, isObj, throwError, omit } from "./utils";
 
-function createUserHandlers(state, fns) {
-  let handlers = {};
-  Object.keys(fns).forEach(key => {
-    handlers[key] = (...params) => fns[key](state)(...params);
-  });
-  return handlers;
-}
-
 export class Store extends React.Component {
   static defaultProps = {
     seeds: [],
@@ -127,8 +119,19 @@ export class Store extends React.Component {
     return handlers;
   }
 
-  createStateFromSeeds(seeds) {
-    return seeds.reduce((acc, seed = {}) => {
+  createUserHandlers() {
+    const { withHandlers: fns } = this.props;
+    let handlers = {};
+    Object.keys(fns).forEach(key => {
+      handlers[key] = (...params) => {
+        fns[key](this.state)(...params);
+      };
+    });
+    return handlers;
+  }
+
+  createStateFromSeeds() {
+    return this.props.seeds.reduce((acc, seed = {}) => {
       const stateName = seed.name;
       const handlers = this.createSeedHandlers(seed);
 
@@ -150,24 +153,27 @@ export class Store extends React.Component {
     }, {});
   }
 
-  init() {
-    const { seeds, withHandlers, omitHandlers } = this.props;
-    const state = this.createStateFromSeeds(seeds);
-    const userHandlers = createUserHandlers(state, withHandlers);
+  initState() {
+    const { omitHandlers, flatten } = this.props;
+    const state = this.createStateFromSeeds();
+    const userHandlers = this.createUserHandlers();
     const handlers = omit(omitHandlers, { ...state.handlers, ...userHandlers });
-    if (this.props.flatten) {
-      return {
-        ...omit("handlers", state),
-        ...handlers
-      };
-    }
-    return {
-      ...state,
-      handlers
-    };
+    return flatten
+      ? {
+          ...omit("handlers", state),
+          ...handlers
+        }
+      : {
+          ...state,
+          handlers
+        };
   }
 
-  state = this.init();
+  state = {};
+
+  componentWillMount() {
+    this.setState(this.initState);
+  }
 
   render() {
     const userProps = omit(
