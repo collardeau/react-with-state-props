@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/collardeau/react-senna/badge.svg?branch=master)](https://coveralls.io/github/collardeau/react-senna?branch=master)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-# react-senna
+# react-with-state-props
 
 A store component to quickly initialize state and state handlers in React.
 
@@ -20,7 +20,7 @@ import { Store } from "react-senna";
 const seeds = [
   {
     name: "todos",
-    initialState: [],
+    initialState: []
   }
 ];
 
@@ -31,26 +31,25 @@ const SennaApp = () => (
     render={props => {
       console.log(props);
       /*
-      {
-        todos: []
-        handlers: {
-          setTodos: [Function]
-        }
-      }
-      */
+            {
+              todos: []
+              handlers: {
+                setTodos: [Function]
+              }
+            }
+            */
       // render whatever you want with the state and handler you just created!
       return <App {...props} />;
     }}
   />
-)
-
+);
 ```
 
 You can easily create more handlers out of the box. Read on!
 
 # Props API
 
-The Store component accepts the following props: `render`, `seeds`, `withHandlers`,  `omitHandlers` and `flatten`.
+The Store component accepts the following props: `render`, `seeds`, `withHandlers`, `omitHandlers` and `flatten`.
 
 ## render `func.isRequired`
 
@@ -73,14 +72,13 @@ The initial (and reset) value of the state being seeded.
 Here, you can create handlers using the current state as a parameter:
 
 ```javascript
-
 const seed = {
-  name: 'counter',
+  name: "counter",
   initialState: 0,
   handlers: {
     incr: state => state + 1
   }
-}
+};
 /*
 results in these props:
 {
@@ -91,8 +89,8 @@ results in these props:
   }
 }
 */
-
 ```
+
 The resulting `props.handlers.incrCounter` function increments the `counter` state by 1
 
 #### toggleable `bool` default: `false`
@@ -100,12 +98,11 @@ The resulting `props.handlers.incrCounter` function increments the `counter` sta
 `toggleable: true` will create a handler that will set the state to its opposite:
 
 ```javascript
-
 const seed = {
-  name: 'isActive',
+  name: "isActive",
   initialState: false,
   toggleable: true
-}
+};
 /*
 results in these props:
 {
@@ -116,7 +113,6 @@ results in these props:
   }
 }
 */
-
 ```
 
 The resulting `props.handlers.toggleIsActive` will flip the state of `isActive`
@@ -128,12 +124,11 @@ In fact, `toggleable: true` is a shortcut for `{ handlers: { toggle: state => !s
 `loadable: true` creates an additional loaded state:
 
 ```javascript
-
 const seed = {
-  name: 'users',
+  name: "users",
   initialState: {},
   loadable: true
-}
+};
 /*
 results in these props:
 {
@@ -145,11 +140,9 @@ results in these props:
   }
 }
 */
-
 ```
 
 `usersLoaded` is automatically set to `true` when `users` is updated.
-
 
 #### resetable `bool` default: `false`
 
@@ -163,7 +156,6 @@ Here you can access the `react-senna` created props so you can you create more c
 For example, controlling two separate counter states:
 
 ```javascript
-
 const seeds = [
   {
     name: "counterA",
@@ -208,7 +200,6 @@ const SennaApp = () => (
 Remove handlers before the props are passed on to the render function. This is good place to remove handlers you used in `withHandlers` but don't want to pass forward:
 
 ```javascript
-
 const seeds = [
   {
     name: "movies",
@@ -233,20 +224,20 @@ const SennaApp = () => (
     withHandlers={withHandlers}
     omitHandlers={omitHandlers}
     render={props => {
-      console.log(props)
-      /* 
-      {
-        movies: {}
-        handlers: {   <-- without `setMovies`
-          fetchMovies: [Function]
-        }
-      }
-      do as you please with the props: 
-      */
+      console.log(props);
+      /*
+            {
+              movies: {}
+              handlers: {   <-- without `setMovies`
+                fetchMovies: [Function]
+              }
+            }
+            do as you please with the props:
+            */
       return <MyApp {...props} />;
     }}
   />
-)
+);
 ```
 
 ## flatten `bool`
@@ -256,7 +247,6 @@ default: `false`
 If you don't like the `handlers` key you don't have to use it:
 
 ```javascript
-
 const seeds = [
   {
     name: "movies",
@@ -269,24 +259,21 @@ const SennaApp = () => (
     seeds={seeds}
     flatten={true}
     render={props => {
-      console.log(props)
-      /* 
-      {
-        movies: {},
-        setMovies: [Function]   <-- without the `handlers` key
-      }
-      */
+      console.log(props);
+      /*
+            {
+              movies: {},
+              setMovies: [Function]   <-- without the `handlers` key
+            }
+            */
       return <MyApp {...props} />;
     }}
   />
 );
-
 ```
 
 # Inspirations
 
-- Andrew Clark's [recompose](https://github.com/acdlite/recompose) library
-- Kent C. Dodds Advanced React Component Patterns [Egghead course](https://egghead.io/courses/advanced-react-component-patterns)
-- Never Write Another HOC [talk](https://www.youtube.com/watch?v=BcVAq3YFiuc) by Michael Jackson 
-
-
+* Andrew Clark's [recompose](https://github.com/acdlite/recompose) library
+* Kent C. Dodds Advanced React Component Patterns [Egghead course](https://egghead.io/courses/advanced-react-component-patterns)
+* Never Write Another HOC [talk](https://www.youtube.com/watch?v=BcVAq3YFiuc) by Michael Jackson
