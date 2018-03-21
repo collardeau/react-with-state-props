@@ -16,8 +16,8 @@ A store component to quickly initialize state and state handlers in React.
 import React from "react";
 import { Store } from "react-with-state-props";
 
-// describe the state you want in a `seeds` array, for example:
-const seeds = [
+// describe the state you want in a `withState` array, for example:
+const withState = [
   {
     name: "todos",
     initialState: []
@@ -27,7 +27,7 @@ const seeds = [
 // Use the Store component to initiate React state and setState handlers
 const AppState = () => (
   <Store
-    seeds={seeds}
+    withState={withState}
     render={props => {
       console.log(props);
       /*
@@ -49,15 +49,15 @@ You can easily create more handlers out of the box. Read on!
 
 # Props API
 
-The Store component accepts the following props: `render`, `seeds`, `withHandlers`, `omitHandlers` and `flatten`.
+The Store component accepts the following props: `render`, `withState`, `withHandlers`, `omitHandlers` and `flatten`.
 
 ## render `func.isRequired`
 
 Your render function which will receive state and actions props!
 
-## seeds `array.isRequired`
+## withState `array.isRequired`
 
-An array of seed objects that will initialize the store, which have **the following keys**:
+An array of objects that will initialize the store, which have **the following keys**:
 
 #### name `string.isRequired`
 
@@ -65,20 +65,22 @@ The name of the state to be created.
 
 #### initialState `any`
 
-The initial (and reset) value of the state being seeded.
+The initial (and reset) value of the state being initiated.
 
 #### handlers `objOf(func)`
 
 Here, you can create handlers using the current state as a parameter:
 
 ```javascript
-const seed = {
-  name: "counter",
-  initialState: 0,
-  handlers: {
-    incr: state => state + 1
+const withState = [
+  {
+    name: "counter",
+    initialState: 0,
+    handlers: {
+      incr: state => state + 1
+    }
   }
-};
+];
 /*
 results in these props:
 {
@@ -98,11 +100,13 @@ The resulting `props.handlers.incrCounter` function increments the `counter` sta
 `toggleable: true` will create a handler that will set the state to its opposite:
 
 ```javascript
-const seed = {
-  name: "isActive",
-  initialState: false,
-  toggleable: true
-};
+const withState = [
+  {
+    name: "isActive",
+    initialState: false,
+    toggleable: true
+  }
+];
 /*
 results in these props:
 {
@@ -124,11 +128,13 @@ In fact, `toggleable: true` is a shortcut for `{ handlers: { toggle: state => !s
 `loadable: true` creates an additional loaded state:
 
 ```javascript
-const seed = {
-  name: "users",
-  initialState: {},
-  loadable: true
-};
+const withState = [
+  {
+    name: "users",
+    initialState: {},
+    loadable: true
+  }
+];
 /*
 results in these props:
 {
@@ -156,7 +162,7 @@ Here you can access the newly-created props so you can you create more complex s
 For example, controlling two separate counter states:
 
 ```javascript
-const seeds = [
+const withState = [
   {
     name: "counterA",
     initialState: 0
@@ -177,7 +183,7 @@ const withHandlers = {
 
 const AppState = () => (
   <Store
-    seeds={seeds}
+    withState={withState}
     withHandlers={withHandlers}
     // use new `props.handlers.setAll` in render:
     render={({ handlers, counterA, counterB }) => (
@@ -200,7 +206,7 @@ const AppState = () => (
 Remove handlers before the props are passed on to the render function. This is good place to remove handlers you used in `withHandlers` but don't want to pass forward:
 
 ```javascript
-const seeds = [
+const withState = [
   {
     name: "movies",
     initialState: {}
@@ -220,7 +226,7 @@ const omitHandlers = ["setMovies"];
 
 const AppState = () => (
   <Store
-    seeds={seeds}
+    withState={withState}
     withHandlers={withHandlers}
     omitHandlers={omitHandlers}
     render={props => {
@@ -247,7 +253,7 @@ default: `false`
 If you don't like the `handlers` key you don't have to use it:
 
 ```javascript
-const seeds = [
+const withState = [
   {
     name: "movies",
     initialState: {}
@@ -256,7 +262,7 @@ const seeds = [
 
 const AppState = () => (
   <Store
-    seeds={seeds}
+    withState={withState}
     flatten={true}
     render={props => {
       console.log(props);

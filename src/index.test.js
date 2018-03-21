@@ -24,7 +24,7 @@ describe("Props Handling", () => {
   test("basic case", () => {
     expect(
       getProps({
-        seeds: [{ name: "users" }]
+        withState: [{ name: "users" }]
       })
     ).toMatchSnapshot();
   });
@@ -32,7 +32,7 @@ describe("Props Handling", () => {
   test("normal case", () => {
     expect(
       getProps({
-        seeds: [
+        withState: [
           { name: "users", initialState: {}, loadable: true },
           { name: "isVisible", initialState: false, toggleable: true }
         ]
@@ -45,7 +45,7 @@ describe("setState callback", () => {
   test("with setable", () => {
     const spy = jest.fn();
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "users",
           setable: true
@@ -59,7 +59,7 @@ describe("setState callback", () => {
   test("with resetable", () => {
     const spy = jest.fn();
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "users",
           resetable: true
@@ -73,7 +73,7 @@ describe("setState callback", () => {
   test("with mergeable", () => {
     const spy = jest.fn();
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "users",
           initialState: [],
@@ -89,7 +89,7 @@ describe("setState callback", () => {
   test("with toggleable", () => {
     const spy = jest.fn();
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "active",
           toggleable: true
@@ -105,7 +105,7 @@ describe("setState callback", () => {
 describe("loaded Flag", () => {
   test("with set", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "users",
           initialState: {},
@@ -121,7 +121,7 @@ describe("loaded Flag", () => {
   });
   test("with toggle", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "isLoggedIn",
           initialState: false,
@@ -138,7 +138,7 @@ describe("loaded Flag", () => {
   });
   test("with merge", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "users",
           initialState: {},
@@ -158,7 +158,7 @@ describe("loaded Flag", () => {
 describe("mergeable", () => {
   test("with objects", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "users",
           initialState: {},
@@ -176,7 +176,7 @@ describe("mergeable", () => {
 
   test("with arrays", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "users",
           initialState: [],
@@ -196,7 +196,7 @@ describe("Errors", () => {
   test("mergeable with num for initial state", () => {
     const spy = jest.fn();
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "x",
           initialState: 0,
@@ -210,7 +210,7 @@ describe("Errors", () => {
   test("mergeable with string for initial state", () => {
     const spy = jest.fn();
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "users",
           initialState: "hi",
@@ -224,7 +224,7 @@ describe("Errors", () => {
   test("set a mergeable state to a num", () => {
     const spy = jest.fn();
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "users",
           initialState: {},
@@ -240,7 +240,7 @@ describe("Errors", () => {
   test("set a mergeable state to a string", () => {
     const spy = jest.fn();
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "users",
           initialState: {},
@@ -256,7 +256,7 @@ describe("Errors", () => {
   test("mergeable and toggleable", () => {
     const spy = jest.fn();
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "users",
           initialState: {},
@@ -273,7 +273,7 @@ describe("Errors", () => {
 describe("withHandlers Prop", () => {
   test("use updated props", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "countA",
           initialState: 0
@@ -298,7 +298,7 @@ describe("withHandlers Prop", () => {
 describe("omitHandlers Prop", () => {
   test("omit case with toggeable", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "active",
           initialState: false,
@@ -313,7 +313,7 @@ describe("omitHandlers Prop", () => {
   });
   test("omit case using withHandlers", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "countA",
           initialState: 0
@@ -343,7 +343,7 @@ describe("omitHandlers Prop", () => {
 describe("flatten", () => {
   test("typical flatten handlers case", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "todos",
           initialState: []
@@ -360,7 +360,7 @@ describe("flatten", () => {
 describe("Use cases", () => {
   test("toggle example using toggeable", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "active",
           initialState: false,
@@ -380,7 +380,7 @@ describe("Use cases", () => {
 
   test("counter example using resetable and custom handlers", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "count",
           initialState: 0,
@@ -406,7 +406,7 @@ describe("Use cases", () => {
 
   test("using compound handlers", () => {
     const comp = renderComp({
-      seeds: [
+      withState: [
         {
           name: "countA",
           initialState: 0

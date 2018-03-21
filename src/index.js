@@ -4,14 +4,14 @@ import { cap, isObj, throwError, omit } from "./utils";
 
 export class Store extends React.Component {
   static defaultProps = {
-    seeds: [],
+    withState: [],
     withHandlers: {},
     omitHandlers: [],
     render: props => <div {...props} />,
     _onError: throwError
   };
   static propTypes = {
-    seeds: PropTypes.arrayOf(
+    withState: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string.isRequired,
         handlers: PropTypes.objectOf(PropTypes.func),
@@ -28,7 +28,7 @@ export class Store extends React.Component {
     flatten: PropTypes.bool,
     _onError: PropTypes.func
   };
-  createSeedHandlers({
+  createStateHandlers({
     name,
     initialState = null,
     handlers: customHandlers = [],
@@ -42,7 +42,7 @@ export class Store extends React.Component {
     const loadedName = `${name}Loaded`;
     const setLoadedName = `set${cap(loadedName)}`;
     const { _onError: onError } = this.props;
-    // state setters for the seed
+    // state setters
     const setLoadedState = (state, cb) => {
       if (loadable) {
         this.setState({
@@ -130,12 +130,12 @@ export class Store extends React.Component {
     return handlers;
   }
 
-  createStateFromSeeds() {
-    return this.props.seeds.reduce((acc, seed = {}) => {
-      const stateName = seed.name;
-      const handlers = this.createSeedHandlers(seed);
+  createState() {
+    return this.props.withState.reduce((acc, state = {}) => {
+      const stateName = state.name;
+      const handlers = this.createStateHandlers(state);
 
-      const maybeLoadedState = seed.loadable
+      const maybeLoadedState = state.loadable
         ? {
             [`${stateName}Loaded`]: false
           }
@@ -143,7 +143,7 @@ export class Store extends React.Component {
 
       return {
         ...acc,
-        [stateName]: seed.initialState,
+        [stateName]: state.initialState,
         ...maybeLoadedState,
         handlers: {
           ...acc.handlers,
@@ -155,7 +155,7 @@ export class Store extends React.Component {
 
   initState() {
     const { omitHandlers, flatten } = this.props;
-    const state = this.createStateFromSeeds();
+    const state = this.createState();
     const userHandlers = this.createUserHandlers();
     const handlers = omit(omitHandlers, { ...state.handlers, ...userHandlers });
     return flatten
@@ -178,7 +178,7 @@ export class Store extends React.Component {
   render() {
     const userProps = omit(
       [
-        "seeds",
+        "withState",
         "render",
         "withHandlers",
         "omitHandlers",
