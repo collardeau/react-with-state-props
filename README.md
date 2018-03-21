@@ -25,13 +25,13 @@ const withState = [
 ];
 
 // Use the `react-with-state-props` to initiate state and actions
-  <Store
-    withState={withState}
-    render={props => {
-      // render what you want with the newly-created state props
-      return <MyApp {...props} />;
-    }}
-  />
+<Store
+  withState={withState}
+  render={props => {
+    // render what you want with the newly-created state props
+    return <MyApp {...props} />;
+  }}
+/>
 /*
 the render function is passed the following props:
 {
