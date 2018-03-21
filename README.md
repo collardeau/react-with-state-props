@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/collardeau/react-senna.svg?branch=master)](https://travis-ci.org/collardeau/react-senna)
-[![Coverage Status](https://coveralls.io/repos/github/collardeau/react-senna/badge.svg?branch=master)](https://coveralls.io/github/collardeau/react-senna?branch=master)
+[![Build Status](https://travis-ci.org/collardeau/react-with-state-props.svg?branch=master)](https://travis-ci.org/collardeau/react-with-state-props)
+[![Coverage Status](https://coveralls.io/repos/github/collardeau/react-with-state-props/badge.svg?branch=master)](https://coveralls.io/github/collardeau/react-with-state-props?branch=master)
 [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
 # react-with-state-props
@@ -25,7 +25,7 @@ const seeds = [
 ];
 
 // Use the Store component to initiate React state and setState handlers
-const SennaApp = () => (
+const AppState = () => (
   <Store
     seeds={seeds}
     render={props => {
@@ -53,7 +53,7 @@ The Store component accepts the following props: `render`, `seeds`, `withHandler
 
 ## render `func.isRequired`
 
-Your render function which will receive `react-senna` props!
+Your render function which will receive state and actions props!
 
 ## seeds `array.isRequired`
 
@@ -152,7 +152,7 @@ results in these props:
 
 `withHandlers` takes an object of high-order functions.
 
-Here you can access the `react-senna` created props so you can you create more complex state changes.
+Here you can access the newly-created props so you can you create more complex state changes.
 For example, controlling two separate counter states:
 
 ```javascript
@@ -175,7 +175,7 @@ const withHandlers = {
   }
 };
 
-const SennaApp = () => (
+const AppState = () => (
   <Store
     seeds={seeds}
     withHandlers={withHandlers}
@@ -218,7 +218,7 @@ const withHandlers = {
 // we want to drop `setMOvies` (and only pass on `fetchMovies`)
 const omitHandlers = ["setMovies"];
 
-const SennaApp = () => (
+const AppState = () => (
   <Store
     seeds={seeds}
     withHandlers={withHandlers}
@@ -254,7 +254,7 @@ const seeds = [
   }
 ];
 
-const SennaApp = () => (
+const AppState = () => (
   <Store
     seeds={seeds}
     flatten={true}

@@ -21,5 +21,5 @@ export function cap(string) {
 }
 
 export function throwError(msg) {
-  throw new Error(`react-senna: ${msg}`);
+  throw new Error(`react-with-state-props: ${msg}`);
 }

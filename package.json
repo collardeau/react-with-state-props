@@ -1,10 +1,10 @@
 {
-  "name": "react-senna",
+  "name": "react-with-state-props",
   "version": "0.3.1",
   "description": "easy React state",
   "repository": {
     "type": "git",
-    "url": "https://github.com/collardeau/react-senna"
+    "url": "https://github.com/collardeau/react-with-state-props"
   },
   "main": "lib/index.js",
   "scripts": {
