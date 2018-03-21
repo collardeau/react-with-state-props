@@ -16,7 +16,7 @@ A store component to quickly initialize state and actions in React.
 import React from "react";
 import { Store } from "react-with-state-props";
 
-// describe the state you want in a `withState` array, for example:
+// describe the state you want in a `withState` array:
 const withState = [
   {
     name: "todos",
@@ -24,7 +24,7 @@ const withState = [
   }
 ];
 
-// Use the Store component to initiate React state and setState actions
+// Use the `react-with-state-props` Store component to initiate state and actions
   <Store
     withState={withState}
     render={props => {
@@ -33,7 +33,7 @@ const withState = [
     }}
   />
 /*
-your render function will be passed these props:
+your render function is being passed these props:
 {
   todos: []
   actions: {
