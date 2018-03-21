@@ -24,16 +24,16 @@ const withState = [
   }
 ];
 
-// Use the `react-with-state-props` Store component to initiate state and actions
+// Use the `react-with-state-props` to initiate state and actions
   <Store
     withState={withState}
     render={props => {
-      // render whatever you want with the state and action you just created!
+      // render whatever you want
       return <MyApp {...props} />;
     }}
   />
 /*
-your render function is being passed these props:
+the render function is being passed these props:
 {
   todos: []
   actions: {
@@ -90,7 +90,7 @@ results in these props:
 */
 ```
 
-The resulting `props.actions.incrCounter` function increments the `counter` state by 1
+The resulting `props.actions.incrCounter` function increments the `counter` state by 1, as you would expect.
 
 #### toggleable `bool` default: `false`
 
@@ -145,11 +145,11 @@ results in these props:
 */
 ```
 
-`usersLoaded` is automatically set to `true` when `users` is updated.
+`usersLoaded` is automatically set to `true` when `users` is updated!
 
 #### resetable `bool` default: `false`
 
-`resetable: true` will create a action that will set the state to its initialState. For example, `actions.resetCounter`.
+`resetable: true` will create an action that will set the state to its initialState. For example, `actions.resetCounter`.
 
 ## compoundActions `objOf(func)`
 
@@ -221,26 +221,26 @@ const compoundActions = {
 // we want to drop `setMOvies` (and only pass on `fetchMovies`)
 const omitActions = ["setMovies"];
 
-const AppState = () => (
+const App = () => (
   <Store
     withState={withState}
     compoundActions={compoundActions}
     omitActions={omitActions}
     render={props => {
-      console.log(props);
-      /*
-                        {
-                          movies: {}
-                          actions: {   <-- without `setMovies`
-                            fetchMovies: [Function]
-                          }
-                        }
-                        do as you please with the props:
-                        */
+      // do as you please with the resulting props:
       return <MyApp {...props} />;
     }}
   />
 );
+/*
+the render functions has access to these props:
+{
+  movies: {}
+  actions: {   <-- without `setMovies`
+    fetchMovies: [Function]
+  }
+}
+*/
 ```
 
 ## flatten `bool`
@@ -257,22 +257,23 @@ const withState = [
   }
 ];
 
-const AppState = () => (
+const App = () => (
   <Store
     withState={withState}
     flatten={true}
     render={props => {
-      console.log(props);
-      /*
-                        {
-                          movies: {},
-                          setMovies: [Function]   <-- without the `actions` key
-                        }
-                        */
+      // newly-created props!
       return <MyApp {...props} />;
     }}
   />
 );
+/*
+render props:
+{
+  movies: {},
+  setMovies: [Function]   <-- without the `actions` key
+}
+*/
 ```
 
 # Inspirations
