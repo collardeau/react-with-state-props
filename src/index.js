@@ -59,13 +59,13 @@ export class Store extends React.Component {
       );
       setLoadedState();
     };
-    let handlers = {}; // aggregrate handlers
-    // create default handlers
+    let actions = {}; // aggregrate actions
+    // create default actions
     if (loadable) {
-      handlers[setLoadedName] = setLoadedState;
+      actions[setLoadedName] = setLoadedState;
     }
     if (setable) {
-      handlers[`set${capName}`] = (state, cb) => {
+      actions[`set${capName}`] = (state, cb) => {
         if (mergeable && typeof state !== typeof initialState) {
           onError(
             `cannot set ${name} because of a mergeable state cannot change type from its initialState`
@@ -75,12 +75,12 @@ export class Store extends React.Component {
       };
     }
     if (resetable) {
-      handlers[`reset${capName}`] = cb => {
+      actions[`reset${capName}`] = cb => {
         setState(initialState, cb);
       };
     }
     if (toggleable) {
-      handlers[`toggle${capName}`] = cb => {
+      actions[`toggle${capName}`] = cb => {
         setState(!this.state[name], cb);
       };
     }
@@ -95,7 +95,7 @@ export class Store extends React.Component {
           `Your ${name} state is mergeable but the initialState is ${initialState}; it should be an object or array`
         );
       }
-      handlers[`merge${capName}`] = (update, cb) => {
+      actions[`merge${capName}`] = (update, cb) => {
         const state = this.state[name];
         if (Array.isArray(state) && Array.isArray(update)) {
           return setState([...state, ...update], cb);
@@ -111,29 +111,29 @@ export class Store extends React.Component {
       };
     }
     Object.keys(customHandlers).forEach(fnName => {
-      handlers[`${fnName}${capName}`] = () => {
+      actions[`${fnName}${capName}`] = () => {
         const fn = customHandlers[fnName];
         setState(fn(this.state[name]));
       };
     });
-    return handlers;
+    return actions;
   }
 
   createUserHandlers() {
     const { withHandlers: fns } = this.props;
-    let handlers = {};
+    let actions = {};
     Object.keys(fns).forEach(key => {
-      handlers[key] = (...params) => {
+      actions[key] = (...params) => {
         fns[key](this.state)(...params);
       };
     });
-    return handlers;
+    return actions;
   }
 
   createState() {
     return this.props.withState.reduce((acc, state = {}) => {
       const stateName = state.name;
-      const handlers = this.createStateHandlers(state);
+      const actions = this.createStateHandlers(state);
 
       const maybeLoadedState = state.loadable
         ? {
@@ -145,9 +145,9 @@ export class Store extends React.Component {
         ...acc,
         [stateName]: state.initialState,
         ...maybeLoadedState,
-        handlers: {
-          ...acc.handlers,
-          ...handlers
+        actions: {
+          ...acc.actions,
+          ...actions
         }
       };
     }, {});
@@ -157,15 +157,15 @@ export class Store extends React.Component {
     const { omitHandlers, flatten } = this.props;
     const state = this.createState();
     const userHandlers = this.createUserHandlers();
-    const handlers = omit(omitHandlers, { ...state.handlers, ...userHandlers });
+    const actions = omit(omitHandlers, { ...state.actions, ...userHandlers });
     return flatten
       ? {
-          ...omit("handlers", state),
-          ...handlers
+          ...omit("actions", state),
+          ...actions
         }
       : {
           ...state,
-          handlers
+          actions
         };
   }
 

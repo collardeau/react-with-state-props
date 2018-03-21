@@ -53,7 +53,7 @@ describe("setState callback", () => {
       ]
     });
     let tree = comp.toJSON();
-    tree.props.handlers.setUsers({}, spy);
+    tree.props.actions.setUsers({}, spy);
     expect(spy).toBeCalled();
   });
   test("with resetable", () => {
@@ -67,7 +67,7 @@ describe("setState callback", () => {
       ]
     });
     const tree = comp.toJSON();
-    tree.props.handlers.resetUsers(spy);
+    tree.props.actions.resetUsers(spy);
     expect(spy).toBeCalled();
   });
   test("with mergeable", () => {
@@ -82,7 +82,7 @@ describe("setState callback", () => {
       ]
     });
     const tree = comp.toJSON();
-    tree.props.handlers.mergeUsers(["user"], spy);
+    tree.props.actions.mergeUsers(["user"], spy);
     expect(spy).toBeCalled();
   });
 
@@ -97,7 +97,7 @@ describe("setState callback", () => {
       ]
     });
     const tree = comp.toJSON();
-    tree.props.handlers.toggleActive(spy);
+    tree.props.actions.toggleActive(spy);
     expect(spy).toBeCalled();
   });
 });
@@ -115,7 +115,7 @@ describe("loaded Flag", () => {
     });
     let tree = comp.toJSON();
     expect(tree.props.usersLoaded).toBe(false);
-    tree.props.handlers.setUsers({ uid: "some-uid" });
+    tree.props.actions.setUsers({ uid: "some-uid" });
     tree = comp.toJSON();
     expect(tree.props.usersLoaded).toBe(true);
   });
@@ -132,7 +132,7 @@ describe("loaded Flag", () => {
     });
     let tree = comp.toJSON();
     expect(tree.props.isLoggedInLoaded).toBe(false);
-    tree.props.handlers.toggleIsLoggedIn();
+    tree.props.actions.toggleIsLoggedIn();
     tree = comp.toJSON();
     expect(tree.props.isLoggedInLoaded).toBe(true);
   });
@@ -149,7 +149,7 @@ describe("loaded Flag", () => {
     });
     let tree = comp.toJSON();
     expect(tree.props.usersLoaded).toBe(false);
-    tree.props.handlers.mergeUsers({ some: "users" });
+    tree.props.actions.mergeUsers({ some: "users" });
     tree = comp.toJSON();
     expect(tree.props.usersLoaded).toBe(true);
   });
@@ -167,8 +167,8 @@ describe("mergeable", () => {
       ]
     });
     let tree = comp.toJSON();
-    tree.props.handlers.setUsers({ a: "a" });
-    tree.props.handlers.mergeUsers({ b: "b" });
+    tree.props.actions.setUsers({ a: "a" });
+    tree.props.actions.mergeUsers({ b: "b" });
     tree = comp.toJSON();
     expect(tree.props.users.a).toBe("a");
     expect(tree.props.users.b).toBe("b");
@@ -185,8 +185,8 @@ describe("mergeable", () => {
       ]
     });
     let tree = comp.toJSON();
-    tree.props.handlers.setUsers(["a"]);
-    tree.props.handlers.mergeUsers(["b"]);
+    tree.props.actions.setUsers(["a"]);
+    tree.props.actions.mergeUsers(["b"]);
     tree = comp.toJSON();
     expect(tree.props.users[0]).toBe("a");
     expect(tree.props.users[1]).toBe("b");
@@ -234,7 +234,7 @@ describe("Errors", () => {
       _onError: spy
     });
     const tree = comp.toJSON();
-    tree.props.handlers.setUsers(0);
+    tree.props.actions.setUsers(0);
     expect(spy).toBeCalled();
   });
   test("set a mergeable state to a string", () => {
@@ -250,7 +250,7 @@ describe("Errors", () => {
       _onError: spy
     });
     const tree = comp.toJSON();
-    tree.props.handlers.setUsers("hi");
+    tree.props.actions.setUsers("hi");
     expect(spy).toBeCalled();
   });
   test("mergeable and toggleable", () => {
@@ -281,15 +281,15 @@ describe("withHandlers Prop", () => {
       ],
       withHandlers: {
         addOne: props => num => {
-          props.handlers.setCountA(props.countA + 1);
+          props.actions.setCountA(props.countA + 1);
         }
       }
     });
     let tree = comp.toJSON();
-    tree.props.handlers.addOne();
+    tree.props.actions.addOne();
     tree = comp.toJSON();
     expect(tree.props.countA).toBe(1);
-    tree.props.handlers.addOne();
+    tree.props.actions.addOne();
     tree = comp.toJSON();
     expect(tree.props.countA).toBe(2);
   });
@@ -309,7 +309,7 @@ describe("omitHandlers Prop", () => {
     });
 
     let tree = comp.toJSON();
-    expect(tree.props.handlers.setActive).toBe(undefined);
+    expect(tree.props.actions.setActive).toBe(undefined);
   });
   test("omit case using withHandlers", () => {
     const comp = renderComp({
@@ -325,8 +325,8 @@ describe("omitHandlers Prop", () => {
       ],
       withHandlers: {
         resetAll: props => () => {
-          props.handlers.setCountA(0);
-          props.handlers.setCountB(0);
+          props.actions.setCountA(0);
+          props.actions.setCountB(0);
         }
       },
       omitHandlers: ["setCountA", "setCountB"]
@@ -334,14 +334,14 @@ describe("omitHandlers Prop", () => {
 
     let tree = comp.toJSON();
     tree = comp.toJSON();
-    expect(tree.props.handlers.resetAll).toBeDefined();
-    expect(tree.props.handlers.setCountA).toBe(undefined);
-    expect(tree.props.handlers.setCountB).toBe(undefined);
+    expect(tree.props.actions.resetAll).toBeDefined();
+    expect(tree.props.actions.setCountA).toBe(undefined);
+    expect(tree.props.actions.setCountB).toBe(undefined);
   });
 });
 
 describe("flatten", () => {
-  test("typical flatten handlers case", () => {
+  test("typical flatten actions case", () => {
     const comp = renderComp({
       withState: [
         {
@@ -353,7 +353,7 @@ describe("flatten", () => {
     });
     let tree = comp.toJSON();
     expect(tree.props.setTodos).toBeDefined();
-    expect(tree.props.handlers).toBeUndefined();
+    expect(tree.props.actions).toBeUndefined();
   });
 });
 
@@ -370,10 +370,10 @@ describe("Use cases", () => {
     });
     let tree = comp.toJSON();
     expect(tree.props.active).toBe(false);
-    tree.props.handlers.toggleActive();
+    tree.props.actions.toggleActive();
     tree = comp.toJSON();
     expect(tree.props.active).toBe(true);
-    tree.props.handlers.toggleActive();
+    tree.props.actions.toggleActive();
     tree = comp.toJSON();
     expect(tree.props.active).toBe(false);
   });
@@ -385,21 +385,28 @@ describe("Use cases", () => {
           name: "count",
           initialState: 0,
           resetable: true,
+          // incr: st => st + 1
           handlers: {
             incr: st => st + 1
           }
+          // createActions: [
+          //   {
+          //     name: "incrCount",
+          //     action: st => st + 1
+          //   }
+          // ]
         }
       ]
     });
     let tree = comp.toJSON();
     expect(tree.props.count).toBe(0);
-    tree.props.handlers.incrCount();
+    tree.props.actions.incrCount();
     tree = comp.toJSON();
     expect(tree.props.count).toBe(1);
-    tree.props.handlers.incrCount();
+    tree.props.actions.incrCount();
     tree = comp.toJSON();
     expect(tree.props.count).toBe(2);
-    tree.props.handlers.resetCount();
+    tree.props.actions.resetCount();
     tree = comp.toJSON();
     expect(tree.props.count).toBe(0);
   });
@@ -418,13 +425,13 @@ describe("Use cases", () => {
       ],
       withHandlers: {
         setAll: props => num => {
-          props.handlers.setCountA(num);
-          props.handlers.setCountB(num);
+          props.actions.setCountA(num);
+          props.actions.setCountB(num);
         }
       }
     });
     let tree = comp.toJSON();
-    tree.props.handlers.setAll(10);
+    tree.props.actions.setAll(10);
     tree = comp.toJSON();
     expect(tree.props.countA).toBe(10);
     expect(tree.props.countB).toBe(10);

@@ -2,7 +2,7 @@
 
 exports[`Props Handling basic case 1`] = `
 Object {
-  "handlers": Object {
+  "actions": Object {
     "setUsers": [Function],
   },
   "users": undefined,
@@ -11,13 +11,13 @@ Object {
 
 exports[`Props Handling no props given 1`] = `
 Object {
-  "handlers": Object {},
+  "actions": Object {},
 }
 `;
 
 exports[`Props Handling normal case 1`] = `
 Object {
-  "handlers": Object {
+  "actions": Object {
     "setIsVisible": [Function],
     "setUsers": [Function],
     "setUsersLoaded": [Function],
