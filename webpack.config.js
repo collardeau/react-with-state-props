@@ -13,7 +13,7 @@ const WebpackConfig = {
     path: BUILD_DIR,
     filename: "index.js",
     libraryTarget: "umd",
-    library: "react-senna"
+    library: "react-with-state-props"
   },
 
   module: {

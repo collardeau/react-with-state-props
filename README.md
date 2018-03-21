@@ -8,13 +8,13 @@ A store component to quickly initialize state and state handlers in React.
 
 ## Installation
 
-`npm install react-senna`
+`npm install react-with-state-props`
 
 ## Usage
 
 ```javascript
 import React from "react";
-import { Store } from "react-senna";
+import { Store } from "react-with-state-props";
 
 // describe the state you want in a `seeds` array, for example:
 const seeds = [
