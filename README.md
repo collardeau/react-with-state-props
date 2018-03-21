@@ -44,7 +44,7 @@ the render function is passed the following props:
 ```
 You can easily create more actions out of the box. Read on!
 
-# Props API
+# Store Props
 
 The Store component accepts the following props: `render`, `withState`, `compoundActions`, `omitActions` and `flatten`.
 
