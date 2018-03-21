@@ -25,26 +25,23 @@ const withState = [
 ];
 
 // Use the Store component to initiate React state and setState actions
-const AppState = () => (
   <Store
     withState={withState}
     render={props => {
-      console.log(props);
-      /*
-                        {
-                          todos: []
-                          actions: {
-                            setTodos: [Function]
-                          }
-                        }
-                        */
       // render whatever you want with the state and action you just created!
-      return <App {...props} />;
+      return <MyApp {...props} />;
     }}
   />
-);
+/*
+your render function will be passed these props:
+{
+  todos: []
+  actions: {
+    setTodos: [Function]
+  }
+}
+*/
 ```
-
 You can easily create more actions out of the box. Read on!
 
 # Props API
