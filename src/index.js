@@ -5,8 +5,8 @@ import { cap, isObj, throwError, omit } from "./utils";
 export class Store extends React.Component {
   static defaultProps = {
     withState: [],
-    withHandlers: {},
-    omitHandlers: [],
+    compoundActions: {},
+    omitActions: [],
     render: props => <div {...props} />,
     _onError: throwError
   };
@@ -14,7 +14,7 @@ export class Store extends React.Component {
     withState: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string.isRequired,
-        handlers: PropTypes.objectOf(PropTypes.func),
+        createActions: PropTypes.objectOf(PropTypes.func),
         setable: PropTypes.bool,
         resetable: PropTypes.bool,
         toggleable: PropTypes.bool,
@@ -22,16 +22,16 @@ export class Store extends React.Component {
         loadable: PropTypes.bool
       })
     ).isRequired,
-    omitHandlers: PropTypes.array,
+    omitActions: PropTypes.array,
     render: PropTypes.func.isRequired,
-    withHandlers: PropTypes.objectOf(PropTypes.func),
+    compoundActions: PropTypes.objectOf(PropTypes.func),
     flatten: PropTypes.bool,
     _onError: PropTypes.func
   };
-  createStateHandlers({
+  createActions({
     name,
     initialState = null,
-    handlers: customHandlers = [],
+    createActions = {},
     setable = true,
     toggleable = false,
     resetable = false,
@@ -110,17 +110,17 @@ export class Store extends React.Component {
         );
       };
     }
-    Object.keys(customHandlers).forEach(fnName => {
+    Object.keys(createActions).forEach(fnName => {
       actions[`${fnName}${capName}`] = () => {
-        const fn = customHandlers[fnName];
+        const fn = createActions[fnName];
         setState(fn(this.state[name]));
       };
     });
     return actions;
   }
 
-  createUserHandlers() {
-    const { withHandlers: fns } = this.props;
+  createCompoundActions() {
+    const { compoundActions: fns } = this.props;
     let actions = {};
     Object.keys(fns).forEach(key => {
       actions[key] = (...params) => {
@@ -133,7 +133,7 @@ export class Store extends React.Component {
   createState() {
     return this.props.withState.reduce((acc, state = {}) => {
       const stateName = state.name;
-      const actions = this.createStateHandlers(state);
+      const actions = this.createActions(state);
 
       const maybeLoadedState = state.loadable
         ? {
@@ -154,10 +154,10 @@ export class Store extends React.Component {
   }
 
   initState() {
-    const { omitHandlers, flatten } = this.props;
+    const { omitActions, flatten } = this.props;
     const state = this.createState();
-    const userHandlers = this.createUserHandlers();
-    const actions = omit(omitHandlers, { ...state.actions, ...userHandlers });
+    const compoundActions = this.createCompoundActions();
+    const actions = omit(omitActions, { ...state.actions, ...compoundActions });
     return flatten
       ? {
           ...omit("actions", state),
@@ -180,8 +180,8 @@ export class Store extends React.Component {
       [
         "withState",
         "render",
-        "withHandlers",
-        "omitHandlers",
+        "compoundActions",
+        "omitActions",
         "flatten",
         "_onError"
       ],

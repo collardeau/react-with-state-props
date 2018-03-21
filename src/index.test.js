@@ -270,7 +270,7 @@ describe("Errors", () => {
   });
 });
 
-describe("withHandlers Prop", () => {
+describe("compoundActions Prop", () => {
   test("use updated props", () => {
     const comp = renderComp({
       withState: [
@@ -279,7 +279,7 @@ describe("withHandlers Prop", () => {
           initialState: 0
         }
       ],
-      withHandlers: {
+      compoundActions: {
         addOne: props => num => {
           props.actions.setCountA(props.countA + 1);
         }
@@ -295,7 +295,7 @@ describe("withHandlers Prop", () => {
   });
 });
 
-describe("omitHandlers Prop", () => {
+describe("omitActions Prop", () => {
   test("omit case with toggeable", () => {
     const comp = renderComp({
       withState: [
@@ -305,13 +305,13 @@ describe("omitHandlers Prop", () => {
           toggeable: true
         }
       ],
-      omitHandlers: ["setActive"]
+      omitActions: ["setActive"]
     });
 
     let tree = comp.toJSON();
     expect(tree.props.actions.setActive).toBe(undefined);
   });
-  test("omit case using withHandlers", () => {
+  test("omit case using compoundActions", () => {
     const comp = renderComp({
       withState: [
         {
@@ -323,13 +323,13 @@ describe("omitHandlers Prop", () => {
           initialState: 0
         }
       ],
-      withHandlers: {
+      compoundActions: {
         resetAll: props => () => {
           props.actions.setCountA(0);
           props.actions.setCountB(0);
         }
       },
-      omitHandlers: ["setCountA", "setCountB"]
+      omitActions: ["setCountA", "setCountB"]
     });
 
     let tree = comp.toJSON();
@@ -378,7 +378,7 @@ describe("Use cases", () => {
     expect(tree.props.active).toBe(false);
   });
 
-  test("counter example using resetable and custom handlers", () => {
+  test("counter example using resetable and compound actions", () => {
     const comp = renderComp({
       withState: [
         {
@@ -386,7 +386,7 @@ describe("Use cases", () => {
           initialState: 0,
           resetable: true,
           // incr: st => st + 1
-          handlers: {
+          createActions: {
             incr: st => st + 1
           }
           // createActions: [
@@ -411,7 +411,7 @@ describe("Use cases", () => {
     expect(tree.props.count).toBe(0);
   });
 
-  test("using compound handlers", () => {
+  test("using compound actions", () => {
     const comp = renderComp({
       withState: [
         {
@@ -423,7 +423,7 @@ describe("Use cases", () => {
           initialState: 0
         }
       ],
-      withHandlers: {
+      compoundActions: {
         setAll: props => num => {
           props.actions.setCountA(num);
           props.actions.setCountB(num);
