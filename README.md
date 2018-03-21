@@ -178,7 +178,7 @@ const compoundActions = {
   }
 };
 
-const AppState = () => (
+const App = () => (
   <Store
     withState={withState}
     compoundActions={compoundActions}
