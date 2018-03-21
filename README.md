@@ -4,7 +4,7 @@
 
 # react-with-state-props
 
-A store component to quickly initialize state and state handlers in React.
+A store component to quickly initialize state and actions in React.
 
 ## Installation
 
@@ -24,32 +24,32 @@ const withState = [
   }
 ];
 
-// Use the Store component to initiate React state and setState handlers
+// Use the Store component to initiate React state and setState actions
 const AppState = () => (
   <Store
     withState={withState}
     render={props => {
       console.log(props);
       /*
-            {
-              todos: []
-              handlers: {
-                setTodos: [Function]
-              }
-            }
-            */
-      // render whatever you want with the state and handler you just created!
+                        {
+                          todos: []
+                          actions: {
+                            setTodos: [Function]
+                          }
+                        }
+                        */
+      // render whatever you want with the state and action you just created!
       return <App {...props} />;
     }}
   />
 );
 ```
 
-You can easily create more handlers out of the box. Read on!
+You can easily create more actions out of the box. Read on!
 
 # Props API
 
-The Store component accepts the following props: `render`, `withState`, `withHandlers`, `omitHandlers` and `flatten`.
+The Store component accepts the following props: `render`, `withState`, `compoundActions`, `omitActions` and `flatten`.
 
 ## render `func.isRequired`
 
@@ -67,16 +67,16 @@ The name of the state to be created.
 
 The initial (and reset) value of the state being initiated.
 
-#### handlers `objOf(func)`
+#### createActions `objOf(func)`
 
-Here, you can create handlers using the current state as a parameter:
+Here, you can create actions using the current state as a parameter:
 
 ```javascript
 const withState = [
   {
     name: "counter",
     initialState: 0,
-    handlers: {
+    createActions: {
       incr: state => state + 1
     }
   }
@@ -85,19 +85,19 @@ const withState = [
 results in these props:
 {
   counter: 0,
-  handlers: {
+  actions: {
     setCounter: [Function],
-    incrCounter: [Function]  <-- new handler
+    incrCounter: [Function]  <-- new action
   }
 }
 */
 ```
 
-The resulting `props.handlers.incrCounter` function increments the `counter` state by 1
+The resulting `props.actions.incrCounter` function increments the `counter` state by 1
 
 #### toggleable `bool` default: `false`
 
-`toggleable: true` will create a handler that will set the state to its opposite:
+`toggleable: true` will create a action that will set the state to its opposite:
 
 ```javascript
 const withState = [
@@ -111,17 +111,17 @@ const withState = [
 results in these props:
 {
   isActive: false,
-  handlers: {
+  actions: {
     setIsActive: [Function],
-    toggleIsActive: [Function],  <-- new handler
+    toggleIsActive: [Function],  <-- new action
   }
 }
 */
 ```
 
-The resulting `props.handlers.toggleIsActive` will flip the state of `isActive`
+The resulting `props.actions.toggleIsActive` will flip the state of `isActive`
 
-In fact, `toggleable: true` is a shortcut for `{ handlers: { toggle: state => !state } }`
+In fact, `toggleable: true` is a shortcut for `{ createAction: { toggle: state => !state } }`
 
 #### loadable `bool` default: `false`
 
@@ -140,9 +140,9 @@ results in these props:
 {
   users: {},
   usersLoaded: false   <-- new state
-  handlers: {
+  actions: {
     setUsers: [Function],
-    setUsersLoaded: [Function],  <-- new handler
+    setUsersLoaded: [Function],  <-- new action
   }
 }
 */
@@ -152,11 +152,11 @@ results in these props:
 
 #### resetable `bool` default: `false`
 
-`resetable: true` will create a handler that will set the state to its initialState. For example, `handlers.resetCounter`.
+`resetable: true` will create a action that will set the state to its initialState. For example, `actions.resetCounter`.
 
-## withHandlers `objOf(func)`
+## compoundActions `objOf(func)`
 
-`withHandlers` takes an object of high-order functions.
+`compoundActions` takes an object of high-order functions.
 
 Here you can access the newly-created props so you can you create more complex state changes.
 For example, controlling two separate counter states:
@@ -173,26 +173,26 @@ const withState = [
   }
 ];
 
-const withHandlers = {
-  setAll: ({ handlers }) => num => {
-    // run multiple handlers
-    handlers.setCounterA(num);
-    handlers.setCounterB(num);
+const compoundActions = {
+  setAll: ({ actions }) => num => {
+    // run multiple actions
+    actions.setCounterA(num);
+    actions.setCounterB(num);
   }
 };
 
 const AppState = () => (
   <Store
     withState={withState}
-    withHandlers={withHandlers}
-    // use new `props.handlers.setAll` in render:
-    render={({ handlers, counterA, counterB }) => (
+    compoundActions={compoundActions}
+    // use new `props.actions.setAll` in render:
+    render={({ actions, counterA, counterB }) => (
        <div>
         A: {counterA}
         <br />
         B: {counterB}
         <br />
-        <button onClick={() => handlers.setAll(10)}>
+        <button onClick={() => actions.setAll(10)}>
           set all counters to 10
         </button>
       </div
@@ -201,9 +201,9 @@ const AppState = () => (
 )
 ```
 
-## omitHandlers `array`
+## omitActions `array`
 
-Remove handlers before the props are passed on to the render function. This is good place to remove handlers you used in `withHandlers` but don't want to pass forward:
+Remove actions before the props are passed on to the render function. This is good place to remove actions you used in `compoundActions` but don't want to pass forward:
 
 ```javascript
 const withState = [
@@ -212,34 +212,34 @@ const withState = [
     initialState: {}
   }
 ];
-const withHandlers = {
-  fetchMovies: ({ handlers }) => () => {
+const compoundActions = {
+  fetchMovies: ({ actions }) => () => {
     // some imaginary db
     db.fetchMovies().then(movies => {
-      handlers.setMovies(movies);
+      actions.setMovies(movies);
     });
   }
 };
 
 // we want to drop `setMOvies` (and only pass on `fetchMovies`)
-const omitHandlers = ["setMovies"];
+const omitActions = ["setMovies"];
 
 const AppState = () => (
   <Store
     withState={withState}
-    withHandlers={withHandlers}
-    omitHandlers={omitHandlers}
+    compoundActions={compoundActions}
+    omitActions={omitActions}
     render={props => {
       console.log(props);
       /*
-            {
-              movies: {}
-              handlers: {   <-- without `setMovies`
-                fetchMovies: [Function]
-              }
-            }
-            do as you please with the props:
-            */
+                        {
+                          movies: {}
+                          actions: {   <-- without `setMovies`
+                            fetchMovies: [Function]
+                          }
+                        }
+                        do as you please with the props:
+                        */
       return <MyApp {...props} />;
     }}
   />
@@ -250,7 +250,7 @@ const AppState = () => (
 
 default: `false`
 
-If you don't like the `handlers` key you don't have to use it:
+If you don't want the `actions` key in your state, you don't have to use it:
 
 ```javascript
 const withState = [
@@ -267,11 +267,11 @@ const AppState = () => (
     render={props => {
       console.log(props);
       /*
-            {
-              movies: {},
-              setMovies: [Function]   <-- without the `handlers` key
-            }
-            */
+                        {
+                          movies: {},
+                          setMovies: [Function]   <-- without the `actions` key
+                        }
+                        */
       return <MyApp {...props} />;
     }}
   />
