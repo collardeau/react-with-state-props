@@ -28,12 +28,12 @@ const withState = [
   <Store
     withState={withState}
     render={props => {
-      // render whatever you want
+      // render what you want with the newly-created state props
       return <MyApp {...props} />;
     }}
   />
 /*
-the render function is being passed these props:
+the render function is passed the following props:
 {
   todos: []
   actions: {
