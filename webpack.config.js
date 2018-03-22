@@ -21,11 +21,6 @@ const WebpackConfig = {
   },
   module: {
     rules: [
-      // {
-      //   test: /.js$/,
-      //   use: "babel-loader",
-      //   exclude: /node_modules/
-      // },
       {
         test: /.tsx?$/,
         use: "awesome-typescript-loader",
