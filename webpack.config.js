@@ -7,7 +7,7 @@ const APP_DIR = path.resolve(__dirname, "src");
 const WebpackConfig = {
   mode: "development",
 
-  entry: APP_DIR + "/index.js",
+  entry: APP_DIR + "/index.ts",
 
   output: {
     path: BUILD_DIR,
@@ -16,11 +16,19 @@ const WebpackConfig = {
     library: "react-with-state-props"
   },
 
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".json"]
+  },
   module: {
     rules: [
+      // {
+      //   test: /.js$/,
+      //   use: "babel-loader",
+      //   exclude: /node_modules/
+      // },
       {
-        test: /.js$/,
-        use: "babel-loader",
+        test: /.tsx?$/,
+        use: "awesome-typescript-loader",
         exclude: /node_modules/
       }
     ]

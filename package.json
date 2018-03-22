@@ -18,7 +18,12 @@
   "author": "Thomas Collardeau",
   "license": "MIT",
   "dependencies": {
-    "prop-types": "^15.6.1"
+    "@types/react": "^16.0.40",
+    "@types/react-dom": "^16.0.4",
+    "awesome-typescript-loader": "^4.0.1",
+    "prop-types": "^15.6.1",
+    "source-map-loader": "^0.2.3",
+    "typescript": "^2.7.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
