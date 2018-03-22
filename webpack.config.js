@@ -15,7 +15,7 @@ const WebpackConfig = {
     libraryTarget: "umd",
     library: "react-with-state-props"
   },
-
+  devtool: "source-map",
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"]
   },
@@ -30,6 +30,11 @@ const WebpackConfig = {
         test: /.tsx?$/,
         use: "awesome-typescript-loader",
         exclude: /node_modules/
+      },
+      {
+        test: /.js$/,
+        use: "source-map-loader",
+        enforce: "pre"
       }
     ]
   }
