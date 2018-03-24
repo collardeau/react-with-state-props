@@ -14,7 +14,7 @@ function getProps(props) {
   return tree && tree.props;
 }
 
-test("create some state", () => {
+test("create state", () => {
   const withState = [
     {
       name: "counter",
@@ -31,7 +31,7 @@ test("create some state", () => {
   expect(tree.props.counter).toBe(0);
 });
 
-test("create some simple actions", () => {
+test("creates setState handler", () => {
   const withState = [
     {
       name: "counter",
@@ -42,7 +42,6 @@ test("create some simple actions", () => {
   let tree = comp.toJSON();
   console.log(tree.props);
   expect(tree.props.counter).toBe(0);
-  expect(tree.props.setCounter).toBeDefined();
   tree.props.setCounter(10);
   tree = comp.toJSON();
   expect(tree.props.counter).toBe(10);
@@ -52,4 +51,27 @@ test("create some simple actions", () => {
   tree = comp.toJSON();
   expect(tree.props.counter).toBe(20);
   expect(spy).toBeCalled();
+});
+
+test("derived props", () => {
+  const withState = [
+    {
+      name: "counter",
+      init: 0
+    }
+  ];
+  const deriveProps = state => {
+    return {
+      started: state.counter > 0
+    };
+  };
+  const comp = renderComp({ withState, deriveProps });
+  let tree = comp.toJSON();
+  expect(tree.props.started).toBe(false);
+  tree.props.setCounter(10);
+  tree = comp.toJSON();
+  expect(tree.props.started).toBe(true);
+  tree.props.setCounter(0);
+  tree = comp.toJSON();
+  expect(tree.props.started).toBe(false);
 });

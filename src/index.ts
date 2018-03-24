@@ -2,7 +2,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import * as R from "ramda";
 
-// types
+// TYPES
 
 interface State {
   [name: string]: any;
@@ -16,13 +16,10 @@ interface StateDef {
 interface Props {
   render: (props: object) => JSX.Element;
   withState: StateDef[];
+  deriveProps: Function;
 }
 
-// functions
-
-const noop = () => {};
-const cap = (string: string) =>
-  string.charAt(0).toUpperCase() + string.slice(1);
+// FUNCTIONS
 
 const setHandler = (comp: any, name: string) => ({
   [`set${cap(name)}`]: (val: State, cb: Function = noop) => {
@@ -43,16 +40,23 @@ const reduceStates = R.curry((comp: any, stateDefs: StateDef[]) =>
   )(stateDefs)
 );
 
-// React
+// REACT
 
 export default class Container extends React.Component<Props, {}> {
   state = {};
-  componentWillMount() {
+  componentDidMount() {
     R.pipe(reduceStates(this), R.tap(state => this.setState(state)))(
       this.props.withState
     );
   }
   render() {
-    return this.props.render({ ...this.state });
+    const { deriveProps = () => {}, render } = this.props;
+    return render({ ...this.state, ...deriveProps(this.state) });
   }
 }
+
+// HELPERS
+
+const noop = () => {};
+const cap = (string: string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);
