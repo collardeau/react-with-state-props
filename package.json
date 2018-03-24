@@ -22,11 +22,13 @@
     "@types/react-dom": "^16.0.4",
     "awesome-typescript-loader": "^4.0.1",
     "prop-types": "^15.6.1",
+    "ramda": "^0.25.0",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.7.2"
   },
   "devDependencies": {
     "@types/jest": "^22.2.1",
+    "@types/ramda": "github:types/npm-ramda#dist",
     "coveralls": "^3.0.0",
     "cross-env": "^5.1.3",
     "jest": "^22.4.2",
