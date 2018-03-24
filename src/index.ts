@@ -16,7 +16,7 @@ interface StateDef {
 interface Props {
   render: (props: object) => JSX.Element;
   withState: StateDef[];
-  deriveProps: Function;
+  deriveProps: (state: State) => State;
 }
 
 // FUNCTIONS
@@ -44,13 +44,26 @@ const reduceStates = R.curry((comp: any, stateDefs: StateDef[]) =>
 
 export default class Container extends React.Component<Props, {}> {
   state = {};
+  static propTypes = {
+    render: PropTypes.func.isRequired,
+    withState: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        init: PropTypes.any.isRequired
+      })
+    ).isRequired,
+    deriveProps: PropTypes.func
+  };
+  static defaultProps = {
+    deriveProps: (state: State) => ({})
+  };
   componentDidMount() {
     R.pipe(reduceStates(this), R.tap(state => this.setState(state)))(
       this.props.withState
     );
   }
   render() {
-    const { deriveProps = () => {}, render } = this.props;
+    const { deriveProps, render } = this.props;
     return render({ ...this.state, ...deriveProps(this.state) });
   }
 }
