@@ -53,25 +53,69 @@ test("creates setState handler", () => {
   expect(spy).toBeCalled();
 });
 
-test("derived props", () => {
+test("derive state", () => {
   const withState = [
     {
       name: "counter",
       init: 0
     }
   ];
-  const deriveProps = state => {
-    return {
-      started: state.counter > 0
-    };
-  };
-  const comp = renderComp({ withState, deriveProps });
+  const deriveState = [
+    [
+      ["counter"],
+      state => ({
+        started: state.counter > 0,
+        isMoreThan9: state.counter > 9
+      })
+    ],
+    [
+      ["started"],
+      state => ({
+        notStarted: !state.started
+      })
+    ]
+  ];
+
+  const comp = renderComp({ withState, deriveState });
   let tree = comp.toJSON();
+  expect(tree.props.counter).toBe(0);
   expect(tree.props.started).toBe(false);
+  expect(tree.props.notStarted).toBe(true);
   tree.props.setCounter(10);
   tree = comp.toJSON();
+  expect(tree.props.counter).toBe(10);
   expect(tree.props.started).toBe(true);
-  tree.props.setCounter(0);
+  expect(tree.props.isMoreThan9).toBe(true);
+  expect(tree.props.notStarted).toBe(false);
+});
+
+test("derive state from 2 listeners", () => {
+  const withState = [
+    {
+      name: "numA",
+      init: 1
+    },
+    {
+      name: "numB",
+      init: 1
+    }
+  ];
+  const deriveState = [
+    [
+      ["numA", "numB"],
+      state => ({
+        sum: state.numA + state.numB
+      })
+    ]
+  ];
+
+  const comp = renderComp({ withState, deriveState });
+  let tree = comp.toJSON();
+  expect(tree.props.sum).toBe(2);
+  tree.props.setNumA(2);
   tree = comp.toJSON();
-  expect(tree.props.started).toBe(false);
+  expect(tree.props.sum).toBe(3);
+  tree.props.setNumB(2);
+  tree = comp.toJSON();
+  expect(tree.props.sum).toBe(4);
 });

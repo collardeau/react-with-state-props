@@ -8,15 +8,18 @@ interface State {
   [name: string]: any;
 }
 
-interface StateDef {
+interface StateItem {
   name: string;
   init: State;
 }
 
+type DeriveStateItem = [string[], Function];
+type Render = (props: object) => JSX.Element;
+
 interface Props {
-  render: (props: object) => JSX.Element;
-  withState: StateDef[];
-  deriveProps: (state: State) => State;
+  render: Render;
+  withState: StateItem[];
+  deriveState: DeriveStateItem[];
 }
 
 // FUNCTIONS
@@ -32,13 +35,27 @@ const setHandler = (comp: any, name: string) => ({
   }
 });
 
-const reduceStates = R.curry((comp: any, stateDefs: StateDef[]) =>
+const reduceStates = R.curry((comp: any, stateDefs: StateItem[]) =>
   R.reduce(
-    (acc, { name, init }: StateDef) =>
+    (acc, { name, init }: StateItem) =>
       R.mergeAll([acc, { [name]: init }, setHandler(comp, name)]),
     {}
   )(stateDefs)
 );
+
+const reduceDeriveState = (
+  prevState: State,
+  state: State,
+  deriveState: DeriveStateItem[]
+) =>
+  R.reduce((acc, [on, fn]) => {
+    const hasChanged = R.reduce(
+      (bool, next: string) => bool || prevState[next] !== state[next],
+      false
+    )(on);
+    if (!hasChanged) return acc;
+    return fn({ ...state, ...acc });
+  }, {})(deriveState);
 
 // REACT
 
@@ -52,19 +69,24 @@ export default class Container extends React.Component<Props, {}> {
         init: PropTypes.any.isRequired
       })
     ).isRequired,
-    deriveProps: PropTypes.func
+    deriveState: PropTypes.array
   };
-  static defaultProps = {
-    deriveProps: (state: State) => ({})
-  };
+  // static defaultProps = {
+  //   deriveState: []
+  // };
   componentDidMount() {
     R.pipe(reduceStates(this), R.tap(state => this.setState(state)))(
       this.props.withState
     );
   }
+  componentDidUpdate(prevProps: object, prevState: State) {
+    const { deriveState } = this.props;
+    if (!deriveState) return;
+    const dState = reduceDeriveState(prevState, this.state, deriveState);
+    Object.keys(dState).length && this.setState(dState);
+  }
   render() {
-    const { deriveProps, render } = this.props;
-    return render({ ...this.state, ...deriveProps(this.state) });
+    return this.props.render({ ...this.state });
   }
 }
 
