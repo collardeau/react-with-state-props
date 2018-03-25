@@ -119,3 +119,40 @@ test("derive state from 2 listeners", () => {
   tree = comp.toJSON();
   expect(tree.props.sum).toBe(4);
 });
+
+test("with handlers", () => {
+  const withState = [
+    {
+      name: "counter",
+      init: 0
+    }
+  ];
+  const withHandlers = {
+    add: ({ setCounter, counter }) => num => {
+      setCounter(num + counter);
+    },
+    add10: ({ add }) => () => {
+      add(10);
+    },
+    reset: ({ setCounter }) => () => {
+      setCounter(0);
+    }
+  };
+  const comp = renderComp({ withState, withHandlers });
+  let tree = comp.toJSON();
+  expect(tree.props.add).toBeDefined();
+  expect(tree.props.add10).toBeDefined();
+  expect(tree.props.reset).toBeDefined();
+  tree.props.add(10);
+  tree = comp.toJSON();
+  expect(tree.props.counter).toBe(10);
+  tree.props.add(20);
+  tree = comp.toJSON();
+  expect(tree.props.counter).toBe(30);
+  tree.props.add10();
+  tree = comp.toJSON();
+  expect(tree.props.counter).toBe(40);
+  tree.props.reset();
+  tree = comp.toJSON();
+  expect(tree.props.counter).toBe(0);
+});

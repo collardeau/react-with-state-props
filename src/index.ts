@@ -13,13 +13,16 @@ interface StateItem {
   init: State;
 }
 
+type HandlerItem = (Props: {}) => (...args: any[]) => {};
 type DeriveStateItem = [string[], Function];
+
 type Render = (props: object) => JSX.Element;
 
 interface Props {
   render: Render;
   withState: StateItem[];
   deriveState: DeriveStateItem[];
+  withHandlers: HandlerItem[];
 }
 
 // FUNCTIONS
@@ -35,13 +38,12 @@ const setHandler = (comp: any, name: string) => ({
   }
 });
 
-const reduceStates = R.curry((comp: any, stateDefs: StateItem[]) =>
+const reduceStates = (comp: any, stateDefs: StateItem[]) =>
   R.reduce(
     (acc, { name, init }: StateItem) =>
       R.mergeAll([acc, { [name]: init }, setHandler(comp, name)]),
     {}
-  )(stateDefs)
-);
+  )(stateDefs);
 
 const reduceDeriveState = (
   prevState: State,
@@ -75,14 +77,20 @@ export default class Container extends React.Component<Props, {}> {
   //   deriveState: []
   // };
   componentDidMount() {
-    R.pipe(reduceStates(this), R.tap(state => this.setState(state)))(
-      this.props.withState
+    const { withState, withHandlers } = this.props;
+    const state = reduceStates(this, this.props.withState || []);
+    const handlers = R.map(
+      fn => (...args: any[]) => fn(this.state)(...args),
+      withHandlers || {}
     );
+    this.setState({ ...state, ...handlers });
   }
   componentDidUpdate(prevProps: object, prevState: State) {
-    const { deriveState } = this.props;
-    if (!deriveState) return;
-    const dState = reduceDeriveState(prevState, this.state, deriveState);
+    const dState = reduceDeriveState(
+      prevState,
+      this.state,
+      this.props.deriveState || []
+    );
     Object.keys(dState).length && this.setState(dState);
   }
   render() {
