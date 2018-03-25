@@ -57,14 +57,16 @@ const createHandlers = (comp: any, withHandlers: Setters = {}) =>
 
 // REACT
 
+const propTypes = {
+  render: PropTypes.func.isRequired,
+  state: PropTypes.object.isRequired,
+  deriveState: PropTypes.array,
+  withHandlers: PropTypes.object
+};
+
 export default class Container extends React.Component<Props, {}> {
   state = {};
-  static propTypes = {
-    render: PropTypes.func.isRequired,
-    state: PropTypes.object.isRequired,
-    deriveState: PropTypes.array
-  };
-
+  static propTypes = propTypes;
   componentDidMount() {
     const { state, withHandlers } = this.props;
     const setters = createSetters(this, state);
@@ -82,7 +84,8 @@ export default class Container extends React.Component<Props, {}> {
     }
   }
   render() {
-    return this.props.render({ ...this.state });
+    const userProps = R.omit(Object.keys(propTypes))(this.props);
+    return this.props.render({ ...this.state, ...userProps });
   }
 }
 

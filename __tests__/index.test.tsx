@@ -14,7 +14,7 @@ function getProps(props) {
   return tree && tree.props;
 }
 
-test("create state", () => {
+test("creates state", () => {
   const state = {
     counter: 0,
     loaded: false
@@ -29,7 +29,6 @@ test("creates setState handler", () => {
   const state = { counter: 0 };
   const comp = renderComp({ state });
   let tree = comp.toJSON();
-  console.log(tree.props);
   expect(tree.props.counter).toBe(0);
   expect(tree.props.setCounter).toBeDefined();
   tree.props.setCounter(10);
@@ -43,7 +42,7 @@ test("creates setState handler", () => {
   expect(spy).toBeCalled();
 });
 
-test("derive state", () => {
+test("derives state", () => {
   const state = {
     counter: 0
   };
@@ -76,7 +75,7 @@ test("derive state", () => {
   expect(tree.props.notStarted).toBe(false);
 });
 
-test("derive state from 2 listeners", () => {
+test("derives state from 2 listeners", () => {
   const state = {
     numA: 1,
     numB: 1
@@ -101,7 +100,7 @@ test("derive state from 2 listeners", () => {
   expect(tree.props.sum).toBe(4);
 });
 
-test("with handlers", () => {
+test("creates handlers", () => {
   const state = {
     counter: 0
   };
@@ -135,8 +134,16 @@ test("with handlers", () => {
   expect(tree.props.counter).toBe(0);
 });
 
-// test("pass user props", () => {
-//   const comp = renderComp({
-//     withState: []
-//   })
-// });
+test("passes user props", () => {
+  const comp = renderComp({
+    state: { counter: 0 },
+    deriveState: [],
+    withHandlers: {},
+    myProp: "thing"
+  });
+  let tree = comp.toJSON();
+  expect(tree.props.state).toBeUndefined();
+  expect(tree.props.deriveState).toBeUndefined();
+  expect(tree.props.withHandlers).toBeUndefined();
+  expect(tree.props.myProp).toBeDefined();
+});
