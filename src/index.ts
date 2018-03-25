@@ -4,46 +4,24 @@ import * as R from "ramda";
 
 // TYPES
 
+type HandlerItem = (Props: {}) => (...args: any[]) => {};
+type DeriveStateItem = [string[], Function];
+type Render = (props: object) => JSX.Element;
+
 interface State {
   [name: string]: any;
 }
-
-interface StateItem {
-  name: string;
-  init: State;
+interface Setters {
+  [name: string]: Function;
 }
-
-type HandlerItem = (Props: {}) => (...args: any[]) => {};
-type DeriveStateItem = [string[], Function];
-
-type Render = (props: object) => JSX.Element;
-
 interface Props {
   render: Render;
-  withState: StateItem[];
+  state: State;
   deriveState: DeriveStateItem[];
   withHandlers: HandlerItem[];
 }
 
 // FUNCTIONS
-
-const setHandler = (comp: any, name: string) => ({
-  [`set${cap(name)}`]: (val: State, cb: Function = noop) => {
-    comp.setState(
-      {
-        [name]: val
-      },
-      cb
-    );
-  }
-});
-
-const reduceStates = (comp: any, stateDefs: StateItem[]) =>
-  R.reduce(
-    (acc, { name, init }: StateItem) =>
-      R.mergeAll([acc, { [name]: init }, setHandler(comp, name)]),
-    {}
-  )(stateDefs);
 
 const reduceDeriveState = (
   prevState: State,
@@ -65,25 +43,28 @@ export default class Container extends React.Component<Props, {}> {
   state = {};
   static propTypes = {
     render: PropTypes.func.isRequired,
-    withState: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        init: PropTypes.any.isRequired
-      })
-    ).isRequired,
+    state: PropTypes.object.isRequired,
     deriveState: PropTypes.array
   };
-  // static defaultProps = {
-  //   deriveState: []
-  // };
+
   componentDidMount() {
-    const { withState, withHandlers } = this.props;
-    const state = reduceStates(this, this.props.withState || []);
+    const { state, withHandlers } = this.props;
+    const setters: Setters = {};
+    Object.keys(state).forEach(key => {
+      setters[`set${cap(key)}`] = (newState: State, cb: () => {}) => {
+        this.setState(
+          {
+            [key]: newState
+          },
+          cb
+        );
+      };
+    });
     const handlers = R.map(
       fn => (...args: any[]) => fn(this.state)(...args),
       withHandlers || {}
     );
-    this.setState({ ...state, ...handlers });
+    this.setState({ ...state, ...setters, ...handlers });
   }
   componentDidUpdate(prevProps: object, prevState: State) {
     const dState = reduceDeriveState(
