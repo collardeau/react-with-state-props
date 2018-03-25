@@ -60,8 +60,8 @@ const createHandlers = (comp: any, withHandlers: Setters = {}) =>
 const propTypes = {
   render: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
-  deriveState: PropTypes.array,
-  withHandlers: PropTypes.object
+  deriveState: PropTypes.arrayOf(PropTypes.array),
+  withHandlers: PropTypes.objectOf(PropTypes.func)
 };
 
 export default class Container extends React.Component<Props, {}> {
