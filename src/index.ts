@@ -60,8 +60,41 @@ const createHandlers = (comp: any, withHandlers: Setters = {}) =>
 const propTypes = {
   render: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
-  deriveState: PropTypes.arrayOf(PropTypes.array),
-  withHandlers: PropTypes.objectOf(PropTypes.func)
+  withHandlers: PropTypes.objectOf(PropTypes.func),
+  deriveState: PropTypes.arrayOf(
+    PropTypes.arrayOf(
+      (
+        propValue,
+        key: number | string,
+        componentName,
+        location,
+        propFullName
+      ) => {
+        if (propValue.length < 2) {
+          return new Error(
+            `Invalid prop ${propFullName} supplied to ${componentName}. Expected an array of length 2`
+          );
+        }
+        if (key === 0) {
+          const val = propValue[key];
+          if (!Array.isArray(val) || val.some(v => typeof v !== "string")) {
+            return new Error(
+              `Invalid prop ${propFullName} supplied to ${componentName}. Expected an array of strings`
+            );
+          }
+        }
+        if (key === 1) {
+          const val = propValue[key];
+          if (typeof val !== "function") {
+            return new Error(
+              `Invalid prop ${propFullName} supplied to ${componentName}. Expected a function`
+            );
+          }
+        }
+        return null;
+      }
+    )
+  )
 };
 
 export default class Container extends React.Component<Props, {}> {
