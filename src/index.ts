@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import * as R from "ramda";
+import * as map from "ramda/src/map";
+import * as omit from "ramda/src/omit";
 
 // TYPES
 
@@ -28,14 +29,14 @@ const reduceDeriveState = (
   state: State,
   deriveState: DeriveStateItem[] = []
 ) =>
-  R.reduce((acc, [on, fn]) => {
-    const hasChanged = R.reduce(
+  deriveState.reduce((acc, [on, fn]) => {
+    const hasChanged = on.reduce(
       (bool, next: string) => bool || prevState[next] !== state[next],
       false
-    )(on);
+    );
     if (!hasChanged) return acc;
     return fn({ ...state, ...acc });
-  }, {})(deriveState);
+  }, {});
 
 const createSetters = (comp: any, state: State) => {
   const setters: Setters = {};
@@ -53,7 +54,7 @@ const createSetters = (comp: any, state: State) => {
 };
 
 const createHandlers = (comp: any, withHandlers: Setters = {}) =>
-  R.map(fn => (...args: any[]) => fn(comp.state)(...args), withHandlers);
+  map(fn => (...args: any[]) => fn(comp.state)(...args), withHandlers);
 
 // REACT
 
@@ -117,7 +118,7 @@ export default class Container extends React.Component<Props, {}> {
     }
   }
   render() {
-    const userProps = R.omit(Object.keys(propTypes))(this.props);
+    const userProps = omit(Object.keys(propTypes))(this.props);
     return this.props.render({ ...this.state, ...userProps });
   }
 }
