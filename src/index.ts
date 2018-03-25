@@ -18,7 +18,7 @@ interface Props {
   render: Render;
   state: State;
   deriveState: DeriveStateItem[];
-  withHandlers: HandlerItem[];
+  withHandlers: Setters; // object of functions
 }
 
 // FUNCTIONS
@@ -26,7 +26,7 @@ interface Props {
 const reduceDeriveState = (
   prevState: State,
   state: State,
-  deriveState: DeriveStateItem[]
+  deriveState: DeriveStateItem[] = []
 ) =>
   R.reduce((acc, [on, fn]) => {
     const hasChanged = R.reduce(
@@ -36,6 +36,24 @@ const reduceDeriveState = (
     if (!hasChanged) return acc;
     return fn({ ...state, ...acc });
   }, {})(deriveState);
+
+const createSetters = (comp: any, state: State) => {
+  const setters: Setters = {};
+  Object.keys(state).forEach(key => {
+    setters[`set${cap(key)}`] = (newState: State, cb: () => {}) => {
+      comp.setState(
+        {
+          [key]: newState
+        },
+        cb
+      );
+    };
+  });
+  return setters;
+};
+
+const createHandlers = (comp: any, withHandlers: Setters = {}) =>
+  R.map(fn => (...args: any[]) => fn(comp.state)(...args), withHandlers);
 
 // REACT
 
@@ -49,30 +67,19 @@ export default class Container extends React.Component<Props, {}> {
 
   componentDidMount() {
     const { state, withHandlers } = this.props;
-    const setters: Setters = {};
-    Object.keys(state).forEach(key => {
-      setters[`set${cap(key)}`] = (newState: State, cb: () => {}) => {
-        this.setState(
-          {
-            [key]: newState
-          },
-          cb
-        );
-      };
-    });
-    const handlers = R.map(
-      fn => (...args: any[]) => fn(this.state)(...args),
-      withHandlers || {}
-    );
+    const setters = createSetters(this, state);
+    const handlers = createHandlers(this, withHandlers);
     this.setState({ ...state, ...setters, ...handlers });
   }
   componentDidUpdate(prevProps: object, prevState: State) {
-    const dState = reduceDeriveState(
+    const derivedState = reduceDeriveState(
       prevState,
       this.state,
-      this.props.deriveState || []
+      this.props.deriveState
     );
-    Object.keys(dState).length && this.setState(dState);
+    if (Object.keys(derivedState).length) {
+      this.setState(derivedState);
+    }
   }
   render() {
     return this.props.render({ ...this.state });
@@ -81,6 +88,5 @@ export default class Container extends React.Component<Props, {}> {
 
 // HELPERS
 
-const noop = () => {};
 const cap = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);

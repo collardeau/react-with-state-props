@@ -101,7 +101,7 @@ test("derive state from 2 listeners", () => {
   expect(tree.props.sum).toBe(4);
 });
 
-test.only("with handlers", () => {
+test("with handlers", () => {
   const state = {
     counter: 0
   };
@@ -134,3 +134,9 @@ test.only("with handlers", () => {
   tree = comp.toJSON();
   expect(tree.props.counter).toBe(0);
 });
+
+// test("pass user props", () => {
+//   const comp = renderComp({
+//     withState: []
+//   })
+// });
