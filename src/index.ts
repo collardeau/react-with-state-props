@@ -26,9 +26,9 @@ interface DeriveStateItem {
 interface Props {
   render: Render;
   state: State;
-  deriveState: DeriveStateItem[];
-  withHandlers: Functions;
-  omitProps: string[];
+  deriveState?: DeriveStateItem[];
+  withHandlers?: Functions;
+  omitProps?: string[];
 }
 
 // FUNCTIONS
