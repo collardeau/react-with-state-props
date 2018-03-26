@@ -5,27 +5,29 @@ import * as omit from "ramda/src/omit";
 
 // TYPES
 
+type Render = React.StatelessComponent<State>;
+type Comp = React.Component;
 type HandlerItem = (Props: {}) => (...args: any[]) => {};
-// type Render = (props: object) => JSX.Element;
-type Render = React.SFC<State>;
 
 interface State {
+  // react state
   [name: string]: any;
 }
 
+interface Functions {
+  [name: string]: Function;
+}
+
 interface DeriveStateItem {
-  onStateChange: string[];
+  onStateChange: string[] | string;
   derive: (state: State) => State;
 }
 
-interface Setters {
-  [name: string]: Function;
-}
 interface Props {
   render: Render;
   state: State;
   deriveState: DeriveStateItem[];
-  withHandlers: Setters; // object of functions
+  withHandlers: Functions;
 }
 
 // FUNCTIONS
@@ -48,8 +50,8 @@ const reduceDerivedState = (
     return derive({ ...state, ...acc });
   }, {});
 
-const createSetters = (comp: any, state: State = {}) => {
-  const setters: Setters = {};
+const createSetters = (comp: Comp, state: State = {}) => {
+  const setters: Functions = {};
   Object.keys(state).forEach(key => {
     setters[`set${cap(key)}`] = (newState: State, cb: () => {}) => {
       comp.setState(
@@ -63,7 +65,7 @@ const createSetters = (comp: any, state: State = {}) => {
   return setters;
 };
 
-const createHandlers = (comp: any, withHandlers: Setters = {}) =>
+const createHandlers = (comp: Comp, withHandlers: Functions = {}) =>
   map(fn => (...args: any[]) => fn(comp.state)(...args), withHandlers);
 
 // REACT
@@ -71,7 +73,8 @@ const createHandlers = (comp: any, withHandlers: Setters = {}) =>
 const propTypes = {
   render: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
-  withHandlers: PropTypes.objectOf(PropTypes.func), // HOF
+  // todo: custom propType to guarantee functions return a fn
+  withHandlers: PropTypes.objectOf(PropTypes.func),
   deriveState: PropTypes.arrayOf(
     PropTypes.shape({
       onStateChange: PropTypes.oneOfType([
