@@ -4,15 +4,120 @@
 
 # react-with-state-props
 
-A container component to initialize state, derived state, and state handlers in React.
+A container render-prop component to initialize, handle and derive state in React.
 
 ## Installation
 
-`npm install react-with-state-props`
+`npm install react-with-state-props --save`
+
+## Examples
+
+Create some state (and setters for each key on your state):
+
+```javascript
+import Container from "react-with-state-props"
+
+// ...
+
+<Container
+  state={{ counter: 0 }}
+  render={props => {
+    // props ready-to-go based on the state you provided:
+    console.log(props);
+    // { counter: 0, setCounter: [Function] }
+    return <MyApp {...props} />;
+    // render your JSX with the newly-created state props
+  }}
+/>;
+```
+
+Create custom state handlers:
+
+```javascript
+
+<Container
+  state={{ counter: 0 }}
+  withHandlers={{
+    incrBy1: props => () => {
+      props.setCounter(props.counter + 1)
+    }
+  }}
+  render={props => {
+    console.log(props);
+    // { counter: 0, setCounter: [Function], incrBy1: [Function] }
+    return <Counter {...props} />; // your JSX
+  }}
+/>;
+
+// another example with multiple handlers and some syntax shorthand:
+
+<Container
+  state={{ counter: 0 }}
+  withHandlers={{
+    reset: ({ setCounter }) => () => setCounter(0),
+    incr: ({ counter, setCounter }) => num => setCounter(counter + num),
+    incrBy1: ({ incr }) => () => incr(1) // using custom handler just defined
+  }}
+  omitProps={["setCounter"]} // drop props before the render function
+  render={props => {
+    console.log(props);
+    // { counter: 0, incr: [Function], incrBy1: [Function], reset: [Function] }
+    return <Counter {...props} />; // your JSX
+  }}
+/>;
+
+```
+
+Keep your original state simple by deriving more state from it:
+
+```javascript
+<Container
+  state={{ counter: 0 }} // original state
+  deriveState={[
+    // derive `isOdd` when `counter` changes
+    {
+      onStateChange: ["counter"],
+      derive: state => ({
+        isOdd: Boolean(state.counter % 2)
+      })
+    }
+  ]}
+  render={props => {
+    // { counter: 0, setCounter: [Function], isOdd: false }
+    return <Counter {...props} />; // your JSX
+  }}
+/>;
+
+```
+
+You can derive state from derived state, if that strikes your fancy:
+
+```javascript
+<Container
+  state={{ counter: 1 }}
+  deriveState={[
+    {
+      onStateChange: ["counter"],
+      derive: state => ({
+        isOdd: Boolean(state.counter % 2)
+      })
+    },
+    {
+      onStateChange: ["isOdd"], // now react to `isOdd` changes
+      derive: state => ({
+        isEven: !state.isOdd
+      })
+    }
+  ]}
+  render={props => {
+    // { counter: 0, setCounter: [Function], isOdd: true, isEven: false }
+    return <Counter {...props} />; // your JSX
+  }}
+/>;
+
+```
 
 ## Usage
-
-Coming soon
 
 ```javascript
 
@@ -33,6 +138,13 @@ const propTypes = {
 };
 
 ```
+
+
+# Development
+
+`react-with-state-props` is build in Typescript.
+PR and Issues welcomed!
+
 # Inspirations
 
 * Andrew Clark's [recompose](https://github.com/acdlite/recompose) library
