@@ -22,7 +22,7 @@ import Container from "react-with-state-props"
 <Container
   state={{ counter: 0 }}
   render={props => {
-    // props ready to go:
+    // props ready to go!
     // { counter: 0, setCounter: [Function] }
     return <MyApp {...props} />;
     // render your JSX with the newly-created state props
@@ -37,11 +37,33 @@ Create some state handlers:
 <Container
   state={{ counter: 0 }}
   withHandlers={{
-    // `counter` and `setCounter` are available props
-    incr: props => () => props.setCounter(props.counter++)
+    incrCounter: props => () => {
+      props.setCounter(props.counter++)
+    }
   }}
   render={props => {
-    // { counter: 0, setCounter: [Function], incr: [Function] }
+    // { counter: 0, setCounter: [Function], incrCounter: [Function] }
+    return <Counter {...props} />; // your JSX
+  }}
+/>;
+
+```
+
+Derive some state.
+
+```javascript
+<Container
+  state={{ counter: 0 }}
+  deriveState={[
+    {
+      onStateChange: ["counter"],
+      derive: state => ({
+        isOdd: Boolean(state.counter % 2)
+      })
+    }
+  ]}
+  render={props => {
+    // { counter: 0, setCounter: [Function], isOdd: false }
     return <Counter {...props} />; // your JSX
   }}
 />;
