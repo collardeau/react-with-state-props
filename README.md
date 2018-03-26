@@ -6,8 +6,6 @@
 
 A container component to initialize state, derived state, and state handlers in React.
 
-`react-with-state-props` is written in Typescript.
-
 ## Installation
 
 `npm install react-with-state-props --save`
@@ -30,7 +28,7 @@ import Container from "react-with-state-props"
     // props ready to go!
     // { counter: 0, setCounter: [Function], incr: [Function] }
     return <Counter {...props} />;
-    // render your JSX with the newly-created by state props
+    // render your JSX with the newly-created state props
   }}
 />;
 
@@ -57,6 +55,12 @@ const propTypes = {
 };
 
 ```
+
+
+## Development
+
+`react-with-state-props` is written in Typescript.
+
 # Inspirations
 
 * Andrew Clark's [recompose](https://github.com/acdlite/recompose) library
