@@ -31,7 +31,7 @@ import Container from "react-with-state-props"
 />;
 ```
 
-Create custom and complex state handlers:
+Create custom state handlers:
 
 ```javascript
 
@@ -48,7 +48,7 @@ Create custom and complex state handlers:
   }}
 />;
 
-// another example:
+// another example with multiple handlers and some syntax shorthand:
 
 <Container
   state={{ counter: 0 }}
@@ -67,7 +67,7 @@ Create custom and complex state handlers:
 
 ```
 
-Keep your original state simple by deriving more state:
+Keep your original state simple by deriving more state from it:
 
 ```javascript
 <Container
@@ -102,7 +102,7 @@ You can derive state from derived state, if that strikes your fancy:
       })
     },
     {
-      onStateChange: ["isOdd"], // you can now react to `isOdd` changes
+      onStateChange: ["isOdd"], // react to `isOdd` changes
       derive: state => ({
         isEven: !state.isOdd
       })
@@ -139,7 +139,7 @@ const propTypes = {
 ```
 
 
-## Development
+# Development
 
 `react-with-state-props` is build in Typescript.
 PR and Issues welcomed!
