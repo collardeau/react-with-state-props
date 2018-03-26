@@ -47,21 +47,20 @@ test("derives state", () => {
     counter: 0
   };
   const deriveState = [
-    [
-      ["counter"],
-      state => ({
+    {
+      onStateChange: ["counter"],
+      derive: state => ({
         started: state.counter > 0,
         isMoreThan9: state.counter > 9
       })
-    ],
-    [
-      ["started"],
-      state => ({
+    },
+    {
+      onStateChange: ["started"],
+      derive: state => ({
         notStarted: !state.started
       })
-    ]
+    }
   ];
-
   const comp = renderComp({ state, deriveState });
   let tree = comp.toJSON();
   expect(tree.props.counter).toBe(0);
@@ -81,14 +80,13 @@ test("derives state from 2 listeners", () => {
     numB: 1
   };
   const deriveState = [
-    [
-      ["numA", "numB"],
-      state => ({
-        sum: state.numA + state.numB
+    {
+      onStateChange: ["numA", "numB"],
+      derive: ({ numA, numB }) => ({
+        sum: numA + numB
       })
-    ]
+    }
   ];
-
   const comp = renderComp({ state, deriveState });
   let tree = comp.toJSON();
   expect(tree.props.sum).toBe(2);
@@ -146,4 +144,20 @@ test("passes user props", () => {
   expect(tree.props.deriveState).toBeUndefined();
   expect(tree.props.withHandlers).toBeUndefined();
   expect(tree.props.myProp).toBeDefined();
+});
+
+describe("propTypes", () => {
+  test("handles bad props", () => {
+    // console.error = jest.fn();
+    // const spy = jest
+    //   .spyOn(global.console, "error")
+    //   .mockImplementation(() => {});
+    // expect(spy).toHaveBeenCalledTimes(0);
+    // renderComp({}); // no props at all
+    // expect(spy).toHaveBeenCalledTimes(1);
+    // expect(spy).toHaveBeenCalledTimes(2);
+    // expect(console.error).toHaveBeenCalledTimes(0);
+    // renderComp({ state: {} }); // no props at all
+    // expect(console.error).toHaveBeenCalledTimes(1);
+  });
 });

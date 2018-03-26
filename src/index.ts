@@ -6,12 +6,18 @@ import * as omit from "ramda/src/omit";
 // TYPES
 
 type HandlerItem = (Props: {}) => (...args: any[]) => {};
-type DeriveStateItem = [string[], Function];
-type Render = (props: object) => JSX.Element;
+// type Render = (props: object) => JSX.Element;
+type Render = React.SFC<State>;
 
 interface State {
   [name: string]: any;
 }
+
+interface DeriveStateItem {
+  onStateChange: string[];
+  derive: (state: State) => State;
+}
+
 interface Setters {
   [name: string]: Function;
 }
@@ -29,16 +35,19 @@ const reduceDeriveState = (
   state: State,
   deriveState: DeriveStateItem[] = []
 ) =>
-  deriveState.reduce((acc, [on, fn]) => {
-    const hasChanged = on.reduce(
-      (bool, next: string) => bool || prevState[next] !== state[next],
-      false
-    );
+  deriveState.reduce((acc, { onStateChange, derive }) => {
+    const hasChanged =
+      // todo: accept string
+      Array.isArray(onStateChange) &&
+      onStateChange.reduce(
+        (bool, next: string) => bool || prevState[next] !== state[next],
+        false
+      );
     if (!hasChanged) return acc;
-    return fn({ ...state, ...acc });
+    return derive({ ...state, ...acc });
   }, {});
 
-const createSetters = (comp: any, state: State) => {
+const createSetters = (comp: any, state: State = {}) => {
   const setters: Setters = {};
   Object.keys(state).forEach(key => {
     setters[`set${cap(key)}`] = (newState: State, cb: () => {}) => {
@@ -63,38 +72,10 @@ const propTypes = {
   state: PropTypes.object.isRequired,
   withHandlers: PropTypes.objectOf(PropTypes.func),
   deriveState: PropTypes.arrayOf(
-    PropTypes.arrayOf(
-      (
-        propValue,
-        key: number | string,
-        componentName,
-        location,
-        propFullName
-      ) => {
-        if (propValue.length < 2) {
-          return new Error(
-            `Invalid prop ${propFullName} supplied to ${componentName}. Expected an array of length 2`
-          );
-        }
-        if (key === 0) {
-          const val = propValue[key];
-          if (!Array.isArray(val) || val.some(v => typeof v !== "string")) {
-            return new Error(
-              `Invalid prop ${propFullName} supplied to ${componentName}. Expected an array of strings`
-            );
-          }
-        }
-        if (key === 1) {
-          const val = propValue[key];
-          if (typeof val !== "function") {
-            return new Error(
-              `Invalid prop ${propFullName} supplied to ${componentName}. Expected a function`
-            );
-          }
-        }
-        return null;
-      }
-    )
+    PropTypes.shape({
+      onStateChange: PropTypes.arrayOf(PropTypes.string).isRequired,
+      derive: PropTypes.func.isRequired
+    })
   )
 };
 
@@ -119,7 +100,8 @@ export default class Container extends React.Component<Props, {}> {
   }
   render() {
     const userProps = omit(Object.keys(propTypes))(this.props);
-    return this.props.render({ ...this.state, ...userProps });
+    const { render } = this.props;
+    return render({ ...this.state, ...userProps });
   }
 }
 
