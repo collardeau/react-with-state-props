@@ -73,7 +73,7 @@ const createHandlers = (comp: Comp, withHandlers: Functions = {}) =>
 const propTypes = {
   render: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
-  // todo: custom propType to guarantee functions return a fn
+  // todo: custom propType to check withHandlers functions return functions
   withHandlers: PropTypes.objectOf(PropTypes.func),
   deriveState: PropTypes.arrayOf(
     PropTypes.shape({
@@ -107,8 +107,7 @@ export default class Container extends React.Component<Props, {}> {
   }
   render() {
     const userProps = omit(Object.keys(propTypes))(this.props);
-    const { render } = this.props;
-    return render({ ...this.state, ...userProps });
+    return this.props.render({ ...this.state, ...userProps });
   }
 }
 
