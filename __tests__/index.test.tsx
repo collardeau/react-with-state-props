@@ -149,6 +149,15 @@ test("creates handlers", () => {
   expect(tree.props.counter).toBe(0);
 });
 
+test("omit props", () => {
+  const comp = renderComp({
+    state: { counter: 0 },
+    omitProps: ["setCounter"]
+  });
+  let tree = comp.toJSON();
+  expect(tree.props.setCounter).toBeUndefined();
+});
+
 test("passes user props", () => {
   const comp = renderComp({
     state: { counter: 0 },
@@ -161,20 +170,4 @@ test("passes user props", () => {
   expect(tree.props.deriveState).toBeUndefined();
   expect(tree.props.withHandlers).toBeUndefined();
   expect(tree.props.myProp).toBeDefined();
-});
-
-describe("propTypes", () => {
-  test("handles bad props", () => {
-    // console.error = jest.fn();
-    // const spy = jest
-    //   .spyOn(global.console, "error")
-    //   .mockImplementation(() => {});
-    // expect(spy).toHaveBeenCalledTimes(0);
-    // renderComp({}); // no props at all
-    // expect(spy).toHaveBeenCalledTimes(1);
-    // expect(spy).toHaveBeenCalledTimes(2);
-    // expect(console.error).toHaveBeenCalledTimes(0);
-    // renderComp({ state: {} }); // no props at all
-    // expect(console.error).toHaveBeenCalledTimes(1);
-  });
 });

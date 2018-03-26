@@ -28,6 +28,7 @@ interface Props {
   state: State;
   deriveState: DeriveStateItem[];
   withHandlers: Functions;
+  omitProps: string[];
 }
 
 // FUNCTIONS
@@ -73,8 +74,8 @@ const createHandlers = (comp: Comp, withHandlers: Functions = {}) =>
 const propTypes = {
   render: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
-  // todo: custom propType to check withHandlers functions return functions
   withHandlers: PropTypes.objectOf(PropTypes.func),
+  omitProps: PropTypes.arrayOf(PropTypes.string),
   deriveState: PropTypes.arrayOf(
     PropTypes.shape({
       onStateChange: PropTypes.oneOfType([
@@ -96,18 +97,18 @@ export default class Container extends React.Component<Props, {}> {
     this.setState({ ...state, ...setters, ...handlers });
   }
   componentDidUpdate(prevProps: object, prevState: State) {
-    const derivedState = reduceDerivedState(
+    const dState = reduceDerivedState(
       prevState,
       this.state,
       this.props.deriveState
     );
-    if (Object.keys(derivedState).length) {
-      this.setState(derivedState);
-    }
+    Object.keys(dState).length && this.setState(dState);
   }
   render() {
-    const userProps = omit(Object.keys(propTypes))(this.props);
-    return this.props.render({ ...this.state, ...userProps });
+    const userProps = omit(Object.keys(propTypes), this.props);
+    const { render, omitProps } = this.props;
+    const state = { ...this.state, ...userProps };
+    return render(Array.isArray(omitProps) ? omit(omitProps, state) : state);
   }
 }
 
