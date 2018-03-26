@@ -4,7 +4,7 @@
 
 # react-with-state-props
 
-A store component to quickly initialize state and actions in React.
+A container component to initialize state, derived state, and state handlers in React.
 
 ## Installation
 
@@ -12,270 +12,27 @@ A store component to quickly initialize state and actions in React.
 
 ## Usage
 
-```javascript
-import React from "react";
-import { Store } from "react-with-state-props";
-
-// describe the state you want in a `withState` array:
-const withState = [
-  {
-    name: "todos",
-    initialState: []
-  }
-];
-
-// Use the `react-with-state-props` to initiate state and actions
-<Store
-  withState={withState}
-  render={props => {
-    // render what you want with the newly-created state props
-    return <MyApp {...props} />;
-  }}
-/>
-/*
-the render function is passed the following props:
-{
-  todos: []
-  actions: {
-    setTodos: [Function]
-  }
-}
-*/
-```
-You can easily create more actions out of the box. Read on!
-
-# Store Props
-
-The Store component accepts the following props: `render`, `withState`, `compoundActions`, `omitActions` and `flatten`.
-
-## render `func.isRequired`
-
-Your render function which will receive state and actions props!
-
-## withState `array.isRequired`
-
-An array of objects that will initialize the store, which have **the following keys**:
-
-#### name `string.isRequired`
-
-The name of the state to be created.
-
-#### initialState `any`
-
-The initial (and reset) value of the state being initiated.
-
-#### createActions `objOf(func)`
-
-Here, you can create actions using the current state as a parameter:
+Coming soon
 
 ```javascript
-const withState = [
-  {
-    name: "counter",
-    initialState: 0,
-    createActions: {
-      incr: state => state + 1
-    }
-  }
-];
-/*
-results in these props:
-{
-  counter: 0,
-  actions: {
-    setCounter: [Function],
-    incrCounter: [Function]  <-- new action
-  }
-}
-*/
-```
 
-The resulting `props.actions.incrCounter` function increments the `counter` state by 1, as you would expect.
-
-#### toggleable `bool` default: `false`
-
-`toggleable: true` will create a action that will set the state to its opposite:
-
-```javascript
-const withState = [
-  {
-    name: "isActive",
-    initialState: false,
-    toggleable: true
-  }
-];
-/*
-results in these props:
-{
-  isActive: false,
-  actions: {
-    setIsActive: [Function],
-    toggleIsActive: [Function],  <-- new action
-  }
-}
-*/
-```
-
-The resulting `props.actions.toggleIsActive` will flip the state of `isActive`
-
-In fact, `toggleable: true` is a shortcut for `{ createAction: { toggle: state => !state } }`
-
-#### loadable `bool` default: `false`
-
-`loadable: true` creates an additional loaded state:
-
-```javascript
-const withState = [
-  {
-    name: "users",
-    initialState: {},
-    loadable: true
-  }
-];
-/*
-results in these props:
-{
-  users: {},
-  usersLoaded: false   <-- new state
-  actions: {
-    setUsers: [Function],
-    setUsersLoaded: [Function],  <-- new action
-  }
-}
-*/
-```
-
-`usersLoaded` is automatically set to `true` when `users` is updated!
-
-#### resetable `bool` default: `false`
-
-`resetable: true` will create an action that will set the state to its initialState. For example, `actions.resetCounter`.
-
-## compoundActions `objOf(func)`
-
-`compoundActions` takes an object of high-order functions.
-
-Here you can access the newly-created props so you can you create more complex state changes.
-For example, controlling two separate counter states:
-
-```javascript
-const withState = [
-  {
-    name: "counterA",
-    initialState: 0
-  },
-  {
-    name: "counterB",
-    initialState: 0
-  }
-];
-
-const compoundActions = {
-  setAll: ({ actions }) => num => {
-    // run multiple actions
-    actions.setCounterA(num);
-    actions.setCounterB(num);
-  }
+const propTypes = {
+  render: PropTypes.func.isRequired,
+  state: PropTypes.object.isRequired,
+  withHandlers: PropTypes.objectOf(PropTypes.func),
+  omitProps: PropTypes.arrayOf(PropTypes.string),
+  deriveState: PropTypes.arrayOf(
+    PropTypes.shape({
+      onStateChange: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.string),
+        PropTypes.string
+      ]).isRequired,
+      derive: PropTypes.func.isRequired
+    })
+  )
 };
 
-const App = () => (
-  <Store
-    withState={withState}
-    compoundActions={compoundActions}
-    // use new `props.actions.setAll` in render:
-    render={({ actions, counterA, counterB }) => (
-       <div>
-        A: {counterA}
-        <br />
-        B: {counterB}
-        <br />
-        <button onClick={() => actions.setAll(10)}>
-          set all counters to 10
-        </button>
-      </div
-    )}
-  />
-)
 ```
-
-## omitActions `array`
-
-Remove actions before the props are passed on to the render function. This is good place to remove actions you used in `compoundActions` but don't want to pass forward:
-
-```javascript
-const withState = [
-  {
-    name: "movies",
-    initialState: {}
-  }
-];
-const compoundActions = {
-  fetchMovies: ({ actions }) => () => {
-    // some imaginary db
-    db.fetchMovies().then(movies => {
-      actions.setMovies(movies);
-    });
-  }
-};
-
-// we want to drop `setMOvies` (and only pass on `fetchMovies`)
-const omitActions = ["setMovies"];
-
-const App = () => (
-  <Store
-    withState={withState}
-    compoundActions={compoundActions}
-    omitActions={omitActions}
-    render={props => {
-      // do as you please with the resulting props:
-      return <MyApp {...props} />;
-    }}
-  />
-);
-/*
-the render functions has access to these props:
-{
-  movies: {}
-  actions: {   <-- without `setMovies`
-    fetchMovies: [Function]
-  }
-}
-*/
-```
-
-## flatten `bool`
-
-default: `false`
-
-If you don't want the `actions` key in your state, you don't have to use it:
-
-```javascript
-const withState = [
-  {
-    name: "movies",
-    initialState: {}
-  }
-];
-
-const App = () => (
-  <Store
-    withState={withState}
-    flatten={true}
-    render={props => {
-      // newly-created props!
-      return <MyApp {...props} />;
-    }}
-  />
-);
-/*
-render props:
-{
-  movies: {},
-  setMovies: [Function]   <-- without the `actions` key
-}
-*/
-```
-
 # Inspirations
 
 * Andrew Clark's [recompose](https://github.com/acdlite/recompose) library
