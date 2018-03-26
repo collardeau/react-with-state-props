@@ -6,13 +6,37 @@
 
 A container component to initialize state, derived state, and state handlers in React.
 
+`react-with-state-props` is written in Typescript.
+
 ## Installation
 
-`npm install react-with-state-props`
+`npm install react-with-state-props --save`
+
+## Example
+
+```javascript
+import Container from "react-with-state-props"
+
+// ...
+
+<Container
+  state={{ counter: 0 }}
+  withHandlers={{
+    // `counter` and `setCounter` are available props
+    incr: props => () => props.setCounter(props.counter++)
+  }}
+  render={props => {
+    console.log(props);
+    // props ready to go!
+    // { counter: 0, setCounter: [Function], incr: [Function] }
+    return <Counter {...props} />;
+    // render your JSX with the newly-created by state props
+  }}
+/>;
+
+```
 
 ## Usage
-
-Coming soon
 
 ```javascript
 
