@@ -32,16 +32,11 @@ const WebpackConfig = {
         enforce: "pre"
       }
     ]
-  }
-};
-
-// webpack production config.
-if (process.env.NODE_ENV === "production") {
-  WebpackConfig.mode = "production";
-  WebpackConfig.externals = {
+  },
+  externals: {
     react: "react",
     "react-dom": "react-dom"
-  };
-}
+  }
+};
 
 module.exports = WebpackConfig;

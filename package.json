@@ -12,8 +12,7 @@
     "test:watch": "jest --watch",
     "coverage": "jest --coverage",
     "watch": "cross-env NODE_ENV=development webpack -w",
-    "build:dev": "cross-env NODE_ENV=development webpack",
-    "build:production": "cross-env NODE_ENV=production webpack -p"
+    "build": "cross-env NODE_ENV=development webpack"
   },
   "author": "Thomas Collardeau",
   "license": "MIT",
