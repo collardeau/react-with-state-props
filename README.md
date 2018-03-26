@@ -4,7 +4,7 @@
 
 # react-with-state-props
 
-A container component to initialize state, derived state, and state handlers in React.
+A container render-prop component to initialize, handle and derive state in React.
 
 ## Installation
 
@@ -43,6 +43,7 @@ Create custom state handlers:
     }
   }}
   render={props => {
+    console.log(props);
     // { counter: 0, setCounter: [Function], incrBy1: [Function] }
     return <Counter {...props} />; // your JSX
   }}
@@ -102,7 +103,7 @@ You can derive state from derived state, if that strikes your fancy:
       })
     },
     {
-      onStateChange: ["isOdd"], // react to `isOdd` changes
+      onStateChange: ["isOdd"], // now react to `isOdd` changes
       derive: state => ({
         isEven: !state.isOdd
       })
