@@ -12,7 +12,7 @@ A container component to initialize state, derived state, and state handlers in 
 
 ## Examples
 
-Create some state: 
+Create some state, and set handlers for each key on your state:
 
 ```javascript
 import Container from "react-with-state-props"
@@ -30,26 +30,43 @@ import Container from "react-with-state-props"
 />;
 ```
 
-Create some state handlers:
+Create custom state handlers:
 
 ```javascript
 
 <Container
   state={{ counter: 0 }}
   withHandlers={{
-    incrCounter: props => () => {
-      props.setCounter(props.counter++)
+    incrBy1: props => () => {
+      props.setCounter(props.counter + 1)
     }
   }}
   render={props => {
-    // { counter: 0, setCounter: [Function], incrCounter: [Function] }
+    // { counter: 0, setCounter: [Function], incrBy1: [Function] }
+    return <Counter {...props} />; // your JSX
+  }}
+/>;
+
+// another example:
+
+<Container
+  state={{ counter: 0 }}
+  withHandlers={{
+    reset: ({ setCounter }) => () => setCounter(0),
+    incr: ({ counter, setCounter }) => num => setCounter(counter + num),
+    incrBy1: ({ incr }) => () => incr(1) // using custom handler just defined
+  }}
+  omitProps={["setCounter"]} // drop props before the render function
+  render={props => {
+    console.log(props);
+    // { counter: 0, incr: [Function], incrBy1: [Function] }
     return <Counter {...props} />; // your JSX
   }}
 />;
 
 ```
 
-Derive some state.
+Derive state from your initial state:
 
 ```javascript
 <Container
@@ -64,6 +81,33 @@ Derive some state.
   ]}
   render={props => {
     // { counter: 0, setCounter: [Function], isOdd: false }
+    return <Counter {...props} />; // your JSX
+  }}
+/>;
+
+```
+
+You can derive state from derived state, if that strikes your fancy:
+
+```javascript
+<Container
+  state={{ counter: 1 }}
+  deriveState={[
+    {
+      onStateChange: ["counter"],
+      derive: state => ({
+        isOdd: Boolean(state.counter % 2)
+      })
+    },
+    {
+      onStateChange: ["isOdd"],
+      derive: state => ({
+        isEven: !state.isOdd
+      })
+    }
+  ]}
+  render={props => {
+    // { counter: 0, setCounter: [Function], isOdd: true, isEven: false }
     return <Counter {...props} />; // your JSX
   }}
 />;
