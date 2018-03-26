@@ -88,7 +88,7 @@ const propTypes = {
 };
 
 export class Container extends React.Component<Props, {}> {
-  state = {};
+  state = { _loaded: false };
   static propTypes = propTypes;
   componentDidMount() {
     const { state, withHandlers } = this.props;
@@ -103,11 +103,13 @@ export class Container extends React.Component<Props, {}> {
       this.props.deriveState
     );
     Object.keys(dState).length && this.setState(dState);
+    !this.state._loaded && this.setState({ _loaded: true });
   }
   render() {
+    if (!this.state._loaded) return null;
     const userProps = omit(Object.keys(propTypes), this.props);
     const { render, omitProps } = this.props;
-    const state = { ...this.state, ...userProps };
+    const state = { ...omit(["_loaded"], this.state), ...userProps };
     return render(Array.isArray(omitProps) ? omit(omitProps, state) : state);
   }
 }
