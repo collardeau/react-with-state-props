@@ -1,6 +1,6 @@
 {
   "name": "react-with-state-props",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "easy React state",
   "repository": {
     "type": "git",
@@ -43,11 +43,7 @@
     "react-dom": ">=16.0.0"
   },
   "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js"],
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
