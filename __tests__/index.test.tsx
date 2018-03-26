@@ -98,6 +98,23 @@ test("derives state from 2 listeners", () => {
   expect(tree.props.sum).toBe(4);
 });
 
+test("derives state with string param", () => {
+  const state = {
+    counter: 1
+  };
+  const deriveState = [
+    {
+      onStateChange: "counter", // using a string and not an array
+      derive: ({ counter }) => ({
+        double: counter * 2
+      })
+    }
+  ];
+  const comp = renderComp({ state, deriveState });
+  let tree = comp.toJSON();
+  expect(tree.props.double).toBe(2);
+});
+
 test("creates handlers", () => {
   const state = {
     counter: 0

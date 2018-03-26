@@ -30,20 +30,21 @@ interface Props {
 
 // FUNCTIONS
 
-const reduceDeriveState = (
+const stateHasChanged = (list: string[], prevState: State, state: State) =>
+  Array.isArray(list) &&
+  list.reduce(
+    (bool, next: string) => bool || prevState[next] !== state[next],
+    false
+  );
+
+const reduceDerivedState = (
   prevState: State,
   state: State,
   deriveState: DeriveStateItem[] = []
 ) =>
   deriveState.reduce((acc, { onStateChange, derive }) => {
-    const hasChanged =
-      // todo: accept string
-      Array.isArray(onStateChange) &&
-      onStateChange.reduce(
-        (bool, next: string) => bool || prevState[next] !== state[next],
-        false
-      );
-    if (!hasChanged) return acc;
+    if (typeof onStateChange === "string") onStateChange = [onStateChange];
+    if (!stateHasChanged(onStateChange, prevState, state)) return acc;
     return derive({ ...state, ...acc });
   }, {});
 
@@ -70,10 +71,13 @@ const createHandlers = (comp: any, withHandlers: Setters = {}) =>
 const propTypes = {
   render: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
-  withHandlers: PropTypes.objectOf(PropTypes.func),
+  withHandlers: PropTypes.objectOf(PropTypes.func), // HOF
   deriveState: PropTypes.arrayOf(
     PropTypes.shape({
-      onStateChange: PropTypes.arrayOf(PropTypes.string).isRequired,
+      onStateChange: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.string),
+        PropTypes.string
+      ]).isRequired,
       derive: PropTypes.func.isRequired
     })
   )
@@ -89,7 +93,7 @@ export default class Container extends React.Component<Props, {}> {
     this.setState({ ...state, ...setters, ...handlers });
   }
   componentDidUpdate(prevProps: object, prevState: State) {
-    const derivedState = reduceDeriveState(
+    const derivedState = reduceDerivedState(
       prevState,
       this.state,
       this.props.deriveState
