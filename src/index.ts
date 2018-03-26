@@ -87,7 +87,7 @@ const propTypes = {
   )
 };
 
-export default class Container extends React.Component<Props, {}> {
+export class Container extends React.Component<Props, {}> {
   state = {};
   static propTypes = propTypes;
   componentDidMount() {
@@ -116,3 +116,5 @@ export default class Container extends React.Component<Props, {}> {
 
 const cap = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
+
+export default Container;
