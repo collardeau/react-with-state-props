@@ -12,7 +12,7 @@ A container component to initialize state, derived state, and state handlers in 
 
 ## Examples
 
-Create some state, and set handlers for each key on your state:
+Create some state (and set handlers for each key on your state):
 
 ```javascript
 import Container from "react-with-state-props"
@@ -22,7 +22,8 @@ import Container from "react-with-state-props"
 <Container
   state={{ counter: 0 }}
   render={props => {
-    // props ready to go!
+    // props ready to go based on the state you provided:
+    console.log(props);
     // { counter: 0, setCounter: [Function] }
     return <MyApp {...props} />;
     // render your JSX with the newly-created state props
@@ -30,7 +31,7 @@ import Container from "react-with-state-props"
 />;
 ```
 
-Create custom state handlers:
+Create custom state handlers with high-order functions:
 
 ```javascript
 
@@ -66,12 +67,13 @@ Create custom state handlers:
 
 ```
 
-Derive state from your initial state:
+Derive state from your original state:
 
 ```javascript
 <Container
-  state={{ counter: 0 }}
+  state={{ counter: 0 }} // original state
   deriveState={[
+    // derive `isOdd` when `counter` changes
     {
       onStateChange: ["counter"],
       derive: state => ({
@@ -87,7 +89,7 @@ Derive state from your initial state:
 
 ```
 
-You can derive state from derived state, if that strikes your fancy:
+Deriver as many properties from your original state as possible. You can derive state from derived state, if that strikes your fancy:
 
 ```javascript
 <Container
@@ -100,7 +102,7 @@ You can derive state from derived state, if that strikes your fancy:
       })
     },
     {
-      onStateChange: ["isOdd"],
+      onStateChange: ["isOdd"], // can now react to changes to `isOdd`
       derive: state => ({
         isEven: !state.isOdd
       })
