@@ -68,7 +68,7 @@ Create custom state handlers:
 
 ```
 
-// You can also derive state from your original state (and keep the original state simple).
+You can also derive state from your original state (and keep the original state simple).
 
 ```javascript
 <Container
