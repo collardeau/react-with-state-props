@@ -2,6 +2,11 @@ import * as React from "react";
 import * as renderer from "react-test-renderer";
 import Container from "../src/index";
 
+// comment out to avoid proptypes warnings
+// test("does not explode with bad props", () => {
+//   const comp = renderer.create(<Container render="hi" />);
+// });
+
 function renderComp(props) {
   return renderer.create(
     <Container {...props} render={renderProps => <div {...renderProps} />} />

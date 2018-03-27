@@ -10,7 +10,6 @@ type Comp = React.Component;
 type HandlerItem = (Props: {}) => (...args: any[]) => {};
 
 interface State {
-  // react state
   [name: string]: any;
 }
 
@@ -23,7 +22,7 @@ interface DeriveStateItem {
   derive: (state: State) => State;
 }
 
-interface Props {
+interface ContainerProps {
   render: Render;
   state: State;
   deriveState?: DeriveStateItem[];
@@ -87,9 +86,18 @@ const propTypes = {
   )
 };
 
-export class Container extends React.Component<Props, {}> {
+const defaultProps = {
+  state: {},
+  withHandlers: {},
+  deriveState: [] as DeriveStateItem[],
+  omitProps: [] as string[],
+  render: () => null as null
+};
+
+export class Container extends React.Component<ContainerProps, {}> {
   state = { _loaded: false };
   static propTypes = propTypes;
+  static defaultProps = defaultProps;
   componentDidMount() {
     const { state, withHandlers } = this.props;
     const setters = createSetters(this, state);
@@ -107,10 +115,16 @@ export class Container extends React.Component<Props, {}> {
   }
   render() {
     if (!this.state._loaded) return null;
-    const userProps = omit(Object.keys(propTypes), this.props);
     const { render, omitProps } = this.props;
+    if (typeof render !== "function") {
+      console.warn(
+        "[react-with-state-props]: you must pass in a render function to your Container"
+      );
+      return null;
+    }
+    const userProps = omit(Object.keys(propTypes), this.props);
     const state = { ...omit(["_loaded"], this.state), ...userProps };
-    return render(Array.isArray(omitProps) ? omit(omitProps, state) : state);
+    return render(omitProps.length ? omit(omitProps, state) : state);
   }
 }
 
