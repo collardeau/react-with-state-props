@@ -96,7 +96,8 @@ You can also create custom state handlers:
   }}
 />;
 
-// another example with multiple handlers and some syntax shorthand, where we want to render a counter that we can increment by 1 or by 10:
+// another example with multiple handlers and some syntax shorthand
+// where we want to render a counter that we can increment by 1 or 10, or reset:
 
 <Container
   state={{ counter: 0 }}
