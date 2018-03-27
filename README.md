@@ -121,7 +121,8 @@ Putting it all together, here is a small todo App example:
 
 import React from "react";
 import Container from "react-with-state-props";
-import uuid from "uuid";
+
+// define state, derived state and state handlers
 
 const state = {
   todos: {},
@@ -169,6 +170,8 @@ const withHandlers = {
   }
 };
 
+// Components
+
 const Todos = ({ todosByDate, newInput, changeInput, submit, toggleTodo }) => (
   <div>
     <input type="text" value={newInput} onChange={changeInput} />
@@ -192,6 +195,8 @@ const App = () => (
 );
 
 // implementation details
+
+const uuid = require('uuid');
 
 function createTodo(title) {
   const id = uuid().slice(0, 5);
