@@ -146,7 +146,7 @@ const withHandlers = {
     setNewInput(e.target.value); // setNewInput is created from `newInput` state
   },
   mergeTodos: ({ setTodos, todos }) => newTodos => {
-    // other handlers will use merge
+    // other handlers will use this
     setTodos({ ...todos, ...newTodos }); // setTodos is created from `todos` state
   },
   submit: ({ mergeTodos, setNewInput, newInput }) => () => {
@@ -154,7 +154,7 @@ const withHandlers = {
     if (!newInput) return;
     const title = newInput.trim();
     mergeTodos(createTodo(title));
-    setNewInput("");
+    setNewInput(""); // reset input
   },
   toggleTodo: ({ mergeTodos, todos }) => id => {
     // toggle done state
