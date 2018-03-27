@@ -12,7 +12,7 @@ A container render-prop component to initialize, handle and derive state in Reac
 
 ## Examples
 
-Create some state (and setters for each key on your state):
+Create some state:
 
 ```javascript
 import Container from "react-with-state-props"
@@ -25,8 +25,8 @@ import Container from "react-with-state-props"
     // props ready-to-go based on the state you provided:
     console.log(props);
     // { counter: 0, setCounter: [Function] }
-    return <MyApp {...props} />;
-    // render your JSX with the newly-created state props
+    // props.setCounter is automatically generated
+    return <MyApp {...props} />; // whatever JSX/Comp you want
   }}
 />;
 ```
@@ -54,21 +54,21 @@ Create custom state handlers:
 <Container
   state={{ counter: 0 }}
   withHandlers={{
-    reset: ({ setCounter }) => () => setCounter(0),
     incr: ({ counter, setCounter }) => num => setCounter(counter + num),
-    incrBy1: ({ incr }) => () => incr(1) // using custom handler just defined
+    incrBy10: ({ incr }) => () => incr(10), // using custom handler just defined
+    reset: ({ setCounter }) => () => setCounter(0)
   }}
   omitProps={["setCounter"]} // drop props before the render function
   render={props => {
     console.log(props);
-    // { counter: 0, incr: [Function], incrBy1: [Function], reset: [Function] }
+    // { counter: 0, incr: [Function], incrBy10: [Function], reset: [Function] }
     return <Counter {...props} />; // your JSX
   }}
 />;
 
 ```
 
-Keep your original state simple by deriving more state from it:
+Derive state from your original state (and keep the original state simple)
 
 ```javascript
 <Container
@@ -88,11 +88,8 @@ Keep your original state simple by deriving more state from it:
   }}
 />;
 
-```
+//You can derive state from derived state, if that strikes your fancy:
 
-You can derive state from derived state, if that strikes your fancy:
-
-```javascript
 <Container
   state={{ counter: 1 }}
   deriveState={[
@@ -116,6 +113,102 @@ You can derive state from derived state, if that strikes your fancy:
 />;
 
 ```
+
+A small todo App example:
+
+```javascript
+
+import React from "react";
+import Container from "react-with-state-props";
+import uuid from "uuid";
+
+const state = {
+  todos: {},
+  newInput: ""
+};
+
+const deriveState = [
+  {
+    onStateChange: "todos", // when `state.todos` change
+    derive: ({ todos }) => ({
+      // derive `todosByDate` array
+      todosByDate: Object.keys(todos)
+        .map(key => todos[key])
+        .sort((a, b) => b.stamp - a.stamp)
+    })
+  }
+];
+
+// define state handlers
+const withHandlers = {
+  changeInput: ({ setNewInput }) => e => {
+    // controlled text input
+    setNewInput(e.target.value); // setNewInput is created from `newInput` state
+  },
+  mergeTodos: ({ setTodos, todos }) => newTodos => {
+    // other handlers will use merge
+    setTodos({ ...todos, ...newTodos }); // setTodos is created from `todos` state
+  },
+  submit: ({ mergeTodos, setNewInput, newInput }) => () => {
+    // submit new todo
+    if (!newInput) return;
+    const title = newInput.trim();
+    mergeTodos(createTodo(title));
+    setNewInput("");
+  },
+  toggleTodo: ({ mergeTodos, todos }) => id => {
+    // toggle done state
+    const todo = todos[id];
+    mergeTodos({
+      [id]: {
+        ...todo,
+        done: !todo.done
+      }
+    });
+  }
+};
+
+const Todos = ({ todosByDate, newInput, changeInput, submit, toggleTodo }) => (
+  <div>
+    <input type="text" value={newInput} onChange={changeInput} />
+    <button onClick={submit}>Submit</button>
+    {todosByDate.map(({ id, done, title }) => (
+      <div key={id} onClick={() => toggleTodo(id)}>
+        {title} {done && " - done"}
+      </div>
+    ))}
+  </div>
+);
+
+const App = () => (
+  <Container
+    state={state}
+    deriveState={deriveState}
+    withHandlers={withHandlers}
+    omitProps={["setTodos", "setNewInput", "mergeTodos"]}
+    render={Todos}
+  />
+);
+
+// implementation details
+
+function createTodo(title) {
+  const id = uuid().slice(0, 5);
+  return {
+    [id]: {
+      title,
+      id,
+      done: false,
+      stamp: Date.now()
+    }
+  };
+}
+
+export default App;
+
+```
+
+That's about it. Enjoy!
 
 ## Usage
 
