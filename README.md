@@ -141,7 +141,6 @@ const deriveState = [
   }
 ];
 
-// define state handlers
 const withHandlers = {
   changeInput: ({ setNewInput }) => e => {
     // controlled text input
