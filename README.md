@@ -117,7 +117,8 @@ You can also create custom state handlers:
 
 ```
 
-**Putting it all together**, here is a basic Todo App, with the ability to create todos and toggle them between done/undone:
+**Putting it all together**, here is a basic Todo App, with the ability to create todos and toggle them between done/undone.
+We keep the todos in an object for easier lookup (by key), and derive an array of todos on changes that we render:
 
 ```javascript
 
