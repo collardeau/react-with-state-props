@@ -31,45 +31,7 @@ import Container from "react-with-state-props"
 />;
 ```
 
-Create custom state handlers:
-
-```javascript
-
-<Container
-  state={{ counter: 0 }}
-  withHandlers={{
-    add1: props => () => {
-      props.setCounter(props.counter + 1)
-    }
-  }}
-  render={props => {
-    console.log(props);
-    // { counter: 0, add1: [Function], setCounter: [Function] }
-    return <Counter {...props} />; // your JSX
-  }}
-/>;
-
-// another example with multiple handlers and some syntax shorthand:
-
-<Container
-  state={{ counter: 0 }}
-  withHandlers={{
-    incr: ({ counter, setCounter }) => num => setCounter(counter + num),
-    incrBy1: ({ incr }) => () => incr(1), // using custom handler just defined
-    incrBy10: ({ incr }) => () => incr(10),
-    reset: ({ setCounter }) => () => setCounter(0)
-  }}
-  omitProps={["setCounter", "incr"]} // drop props before the render function
-  render={props => {
-    console.log(props);
-    // { counter: 0, incrBy1: [Function], incrBy10: [Function], reset: [Function] }
-    return <Counter {...props} />; // your JSX
-  }}
-/>;
-
-```
-
-You can also derive state (keep your original state as simple as possible and derive as much as you can):
+You can derive state (and keep your original state as simple as possible):
 
 ```javascript
 <Container
@@ -109,6 +71,45 @@ You can also derive state (keep your original state as simple as possible and de
   ]}
   render={props => {
     // { counter: 0, setCounter: [Function], isOdd: true, isEven: false }
+    return <Counter {...props} />; // your JSX
+  }}
+/>;
+
+```
+
+You can also create custom state handlers:
+
+```javascript
+
+<Container
+  state={{ counter: 0 }}
+  withHandlers={{
+    add1: props => () => {
+      // props.setCounter was created in Container
+      props.setCounter(props.counter + 1)
+    }
+  }}
+  render={props => {
+    console.log(props);
+    // { counter: 0, add1: [Function], setCounter: [Function] }
+    return <Counter {...props} />; // your JSX
+  }}
+/>;
+
+// another example with multiple handlers and some syntax shorthand:
+
+<Container
+  state={{ counter: 0 }}
+  withHandlers={{
+    incr: ({ counter, setCounter }) => num => setCounter(counter + num),
+    incrBy1: ({ incr }) => () => incr(1), // using custom handler just defined
+    incrBy10: ({ incr }) => () => incr(10),
+    reset: ({ setCounter }) => () => setCounter(0)
+  }}
+  omitProps={["setCounter", "incr"]} // drop props before the render function
+  render={props => {
+    console.log(props);
+    // { counter: 0, incrBy1: [Function], incrBy10: [Function], reset: [Function] }
     return <Counter {...props} />; // your JSX
   }}
 />;
