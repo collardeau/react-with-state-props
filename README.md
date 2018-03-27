@@ -38,13 +38,13 @@ Create custom state handlers:
 <Container
   state={{ counter: 0 }}
   withHandlers={{
-    incrBy1: props => () => {
+    add1: props => () => {
       props.setCounter(props.counter + 1)
     }
   }}
   render={props => {
     console.log(props);
-    // { counter: 0, setCounter: [Function], incrBy1: [Function] }
+    // { counter: 0, add1: [Function], setCounter: [Function] }
     return <Counter {...props} />; // your JSX
   }}
 />;
