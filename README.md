@@ -96,7 +96,7 @@ You can also create custom state handlers:
   }}
 />;
 
-// another example with multiple handlers and some syntax shorthand:
+// another example with multiple handlers and some syntax shorthand, where we want to render a counter that we can increment by 1 or by 10:
 
 <Container
   state={{ counter: 0 }}
@@ -116,7 +116,7 @@ You can also create custom state handlers:
 
 ```
 
-**Putting it all together**, here is a basic Todo App example:
+**Putting it all together**, here is a basic Todo App, with the ability to create todos and toggle them between done/undone:
 
 ```javascript
 
