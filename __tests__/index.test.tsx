@@ -53,14 +53,14 @@ test("derives state", () => {
   };
   const deriveState = [
     {
-      onStateChange: ["counter"],
+      onStateChange: "counter",
       derive: state => ({
         started: state.counter > 0,
         isMoreThan9: state.counter > 9
       })
     },
     {
-      onStateChange: ["started"],
+      onStateChange: ["started"], // string or array
       derive: state => ({
         notStarted: !state.started
       })
@@ -101,23 +101,6 @@ test("derives state from 2 listeners", () => {
   tree.props.setNumB(2);
   tree = comp.toJSON();
   expect(tree.props.sum).toBe(4);
-});
-
-test("derives state with string param", () => {
-  const state = {
-    counter: 1
-  };
-  const deriveState = [
-    {
-      onStateChange: "counter", // using a string and not an array
-      derive: ({ counter }) => ({
-        double: counter * 2
-      })
-    }
-  ];
-  const comp = renderComp({ state, deriveState });
-  let tree = comp.toJSON();
-  expect(tree.props.double).toBe(2);
 });
 
 test("creates handlers", () => {
