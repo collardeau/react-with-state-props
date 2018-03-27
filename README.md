@@ -68,7 +68,7 @@ Create custom state handlers:
 
 ```
 
-Derive state from your original state (and keep the original state simple)
+// You can also derive state from your original state (and keep the original state simple).
 
 ```javascript
 <Container
@@ -88,7 +88,7 @@ Derive state from your original state (and keep the original state simple)
   }}
 />;
 
-//You can derive state from derived state, if that strikes your fancy:
+// You can derive state from derived state:
 
 <Container
   state={{ counter: 1 }}
@@ -114,7 +114,7 @@ Derive state from your original state (and keep the original state simple)
 
 ```
 
-A small todo App example:
+Putting it all together, here is a small todo App example:
 
 ```javascript
 
