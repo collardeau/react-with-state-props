@@ -91,15 +91,25 @@ const defaultProps = {
   withHandlers: {},
   deriveState: [] as DeriveStateItem[],
   omitProps: [] as string[],
-  render: () => null as null
+  render: () => {
+    warn("Please pass in a render function to your container");
+    return null as null;
+  }
+};
+
+const initialState = {
+  _loaded: false
 };
 
 export class Container extends React.Component<ContainerProps, {}> {
-  state = { _loaded: false };
+  state = initialState;
   static propTypes = propTypes;
   static defaultProps = defaultProps;
   componentDidMount() {
     const { state, withHandlers } = this.props;
+    if (!Object.keys(state).length) {
+      return warn("Please pass in a state object to your container.");
+    }
     const setters = createSetters(this, state);
     const handlers = createHandlers(this, withHandlers);
     this.setState({ ...state, ...setters, ...handlers });
@@ -116,12 +126,7 @@ export class Container extends React.Component<ContainerProps, {}> {
   render() {
     if (!this.state._loaded) return null;
     const { render, omitProps } = this.props;
-    if (typeof render !== "function") {
-      console.warn(
-        "[react-with-state-props]: you must pass in a render function to your Container"
-      );
-      return null;
-    }
+    if (typeof render !== "function") return null;
     const userProps = omit(Object.keys(propTypes), this.props);
     const state = { ...omit(["_loaded"], this.state), ...userProps };
     return render(omitProps.length ? omit(omitProps, state) : state);
@@ -129,6 +134,11 @@ export class Container extends React.Component<ContainerProps, {}> {
 }
 
 // HELPERS
+
+const warn = (msg: string) => {
+  console.warn(`[react-with-state-props]: ${msg}`);
+  return null as null;
+};
 
 const cap = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
