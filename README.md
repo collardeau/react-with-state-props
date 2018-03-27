@@ -115,7 +115,7 @@ You can also derive state from your original state (and keep the original state 
 
 ```
 
-Putting it all together, here is a small todo App example:
+**Putting it all together**, here is a basic Todo App example:
 
 ```javascript
 
