@@ -69,7 +69,7 @@ Create custom state handlers:
 
 ```
 
-You can also derive state from your original state (and keep the original state simple).
+You can also derive state (keep your original state as simple as possible and derive as much as you can):
 
 ```javascript
 <Container
@@ -96,14 +96,14 @@ You can also derive state from your original state (and keep the original state 
   deriveState={[
     {
       onStateChange: ["counter"],
-      derive: state => ({
-        isOdd: Boolean(state.counter % 2)
+      derive: ({ counter }) => ({
+        isOdd: Boolean(counter % 2)
       })
     },
     {
       onStateChange: ["isOdd"], // now react to `isOdd` changes
-      derive: state => ({
-        isEven: !state.isOdd
+      derive: ({ isOdd }) => ({
+        isEven: !isOdd
       })
     }
   ]}
