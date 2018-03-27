@@ -55,13 +55,14 @@ Create custom state handlers:
   state={{ counter: 0 }}
   withHandlers={{
     incr: ({ counter, setCounter }) => num => setCounter(counter + num),
-    incrBy10: ({ incr }) => () => incr(10), // using custom handler just defined
+    incrBy1: ({ incr }) => () => incr(1), // using custom handler just defined
+    incrBy10: ({ incr }) => () => incr(10),
     reset: ({ setCounter }) => () => setCounter(0)
   }}
-  omitProps={["setCounter"]} // drop props before the render function
+  omitProps={["setCounter", "incr"]} // drop props before the render function
   render={props => {
     console.log(props);
-    // { counter: 0, incr: [Function], incrBy10: [Function], reset: [Function] }
+    // { counter: 0, incrBy1: [Function], incrBy10: [Function], reset: [Function] }
     return <Counter {...props} />; // your JSX
   }}
 />;
