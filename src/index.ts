@@ -30,46 +30,6 @@ interface ContainerProps {
   omitProps?: string[];
 }
 
-// FUNCTIONS
-
-const stateHasChanged = (list: string[], prevState: State, state: State) =>
-  Array.isArray(list) &&
-  list.reduce(
-    (bool, next: string) => bool || prevState[next] !== state[next],
-    false
-  );
-
-const reduceDerivedState = (
-  prevState: State,
-  state: State,
-  deriveState: DeriveStateItem[] = []
-) =>
-  deriveState.reduce((acc, { onStateChange, derive }) => {
-    if (typeof onStateChange === "string") onStateChange = [onStateChange];
-    if (!stateHasChanged(onStateChange, prevState, state)) return acc;
-    return derive({ ...state, ...acc });
-  }, {});
-
-const createSetters = (comp: Comp, state: State = {}) => {
-  const setters: Functions = {};
-  Object.keys(state).forEach(key => {
-    setters[`set${cap(key)}`] = (newState: State, cb: () => {}) => {
-      comp.setState(
-        {
-          [key]: newState
-        },
-        cb
-      );
-    };
-  });
-  return setters;
-};
-
-const createHandlers = (comp: Comp, withHandlers: Functions = {}) =>
-  map(fn => (...args: any[]) => fn(comp.state)(...args), withHandlers);
-
-// REACT
-
 const propTypes = {
   render: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
@@ -97,34 +57,68 @@ const defaultProps = {
   }
 };
 
-const initialState = {
-  _loaded: false
+// LOGIC
+
+let watchers: State = {}; // todo: typings
+
+const reduceWatchers = (defs: any[]) =>
+  flatten(
+    defs
+      .map(def => def.onStateChange)
+      .map(on => (typeof on === "string" ? [on] : on))
+  ).reduce((acc: object, next: string) => ({ ...acc, [next]: true }), {});
+
+const reduceState = (defs: any[], state: State = {}, all: Boolean = false) =>
+  defs.reduce((acc, { onStateChange: on, derive }) => {
+    if (typeof on === "string") on = [on];
+    const shouldUpdate = all || on.some((o: string) => watchers[o]);
+    if (shouldUpdate) return { ...acc, ...derive(acc) };
+    return acc;
+  }, state);
+
+const createSetters = (state: State, updater: Function) => {
+  const setters: Functions = {};
+  Object.keys(state).forEach(key => {
+    setters[`set${cap(key)}`] = (newState: State, cb: () => {}) => {
+      updater(
+        {
+          [key]: newState
+        },
+        cb
+      );
+    };
+  });
+  return setters;
 };
 
+const createHandlers = (comp: Comp, withHandlers: Functions = {}) =>
+  map(fn => (...args: any[]) => fn(comp.state)(...args), withHandlers);
+
+// REACT
+
 export class Container extends React.Component<ContainerProps, {}> {
-  state = initialState;
   static propTypes = propTypes;
   static defaultProps = defaultProps;
-  componentDidMount() {
-    const { state, withHandlers } = this.props;
+  constructor(props: any) {
+    super(props);
+    const { state, withHandlers, deriveState } = this.props;
     if (!Object.keys(state).length) {
       return warn("Please pass in a state object to your container.");
     }
-    const setters = createSetters(this, state);
-    const handlers = createHandlers(this, withHandlers);
-    this.setState({ ...state, ...setters, ...handlers });
-  }
-  componentDidUpdate(prevProps: object, prevState: State) {
-    const dState = reduceDerivedState(
-      prevState,
-      this.state,
-      this.props.deriveState
-    );
-    Object.keys(dState).length && this.setState(dState);
-    !this.state._loaded && this.setState({ _loaded: true });
+    watchers = reduceWatchers(deriveState);
+    const initialState = {
+      ...reduceState(deriveState, state, true),
+      ...createSetters(state, (changes: State, cb: () => {}) => {
+        this.setState(
+          reduceState(deriveState, { ...this.state, ...changes }),
+          cb
+        );
+      }),
+      ...createHandlers(this, withHandlers)
+    };
+    this.state = initialState;
   }
   render() {
-    if (!this.state._loaded) return null;
     const { render, omitProps } = this.props;
     if (typeof render !== "function") return null;
     const userProps = omit(Object.keys(propTypes), this.props);
@@ -139,6 +133,9 @@ const warn = (msg: string) => {
   console.warn(`[react-with-state-props]: ${msg}`);
   return null as null;
 };
+
+const flatten = (arr: any[]) =>
+  arr.reduce((acc, next) => [...acc, ...next], []);
 
 const cap = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
