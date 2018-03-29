@@ -40,14 +40,18 @@ const stateHasChanged = (list: string[], prevState: State, state: State) =>
   );
 
 const reduceDerivedState = (
-  prevState: State,
-  state: State,
-  deriveState: DeriveStateItem[] = []
+  deriveState: DeriveStateItem[] = [],
+  // only pass deriveState to derive all states
+  // regardless of listeners
+  prevState?: State,
+  state?: State
 ) =>
   deriveState.reduce((acc, { onStateChange, derive }) => {
     if (typeof onStateChange === "string") onStateChange = [onStateChange];
-    if (!stateHasChanged(onStateChange, prevState, state)) return acc;
-    return derive({ ...state, ...acc });
+    if (state && stateHasChanged(onStateChange, prevState, state)) {
+      return derive({ ...state, ...acc });
+    }
+    return acc;
   }, {});
 
 const createSetters = (comp: Comp, state: State = {}) => {
@@ -112,13 +116,14 @@ export class Container extends React.Component<ContainerProps, {}> {
     }
     const setters = createSetters(this, state);
     const handlers = createHandlers(this, withHandlers);
-    this.setState({ ...state, ...setters, ...handlers });
+    const dState = reduceDerivedState(this.props.deriveState);
+    this.setState({ ...state, ...setters, ...handlers, ...dState });
   }
   componentDidUpdate(prevProps: object, prevState: State) {
     const dState = reduceDerivedState(
+      this.props.deriveState,
       prevState,
-      this.state,
-      this.props.deriveState
+      this.state
     );
     Object.keys(dState).length && this.setState(dState);
     !this.state._loaded && this.setState({ _loaded: true });
