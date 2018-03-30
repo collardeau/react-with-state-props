@@ -59,18 +59,15 @@ const defaultProps = {
 
 // LOGIC
 
-let watchers: State = {}; // todo: typings
-
+let watchers: State = {};
 const reduceWatchers = (defs: any[]) =>
-  flatten(
-    defs
-      .map(def => def.onStateChange)
-      .map(on => (typeof on === "string" ? [on] : on))
-  ).reduce((acc: object, next: string) => ({ ...acc, [next]: true }), {});
+  flatten(defs.map(def => def.onStateChange)).reduce(
+    (acc: object, next: string) => ({ ...acc, [next]: true }),
+    {}
+  );
 
 const reduceState = (defs: any[], state: State = {}, all: Boolean = false) =>
   defs.reduce((acc, { onStateChange: on, derive }) => {
-    if (typeof on === "string") on = [on];
     const shouldUpdate = all || on.some((o: string) => watchers[o]);
     if (shouldUpdate) return { ...acc, ...derive(acc) };
     return acc;
@@ -101,16 +98,20 @@ export class Container extends React.Component<ContainerProps, {}> {
   static defaultProps = defaultProps;
   constructor(props: any) {
     super(props);
-    const { state, withHandlers, deriveState } = this.props;
+    const { state, deriveState, withHandlers } = this.props;
     if (!Object.keys(state).length) {
       return warn("Please pass in a state object to your container.");
     }
-    watchers = reduceWatchers(deriveState);
+    const deriveDefs = deriveState.map(({ onStateChange: on, ...rest }) => ({
+      ...rest,
+      onStateChange: typeof on === "string" ? [on] : on
+    }));
+    watchers = reduceWatchers(deriveDefs);
     const initialState = {
-      ...reduceState(deriveState, state, true),
+      ...reduceState(deriveDefs, state, true),
       ...createSetters(state, (changes: State, cb: () => {}) => {
         this.setState(
-          reduceState(deriveState, { ...this.state, ...changes }),
+          reduceState(deriveDefs, { ...this.state, ...changes }),
           cb
         );
       }),
